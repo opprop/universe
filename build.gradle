@@ -88,7 +88,6 @@ sourceSets {
             srcDir "src"
         }
 
-        //Leads to a dir structure of "checker-framework-inference/bin/checkers/...classes...
         output.classesDir "bin/src"
         compileClasspath += toPackageClasspath
     }
@@ -97,11 +96,11 @@ sourceSets {
     test {
         java {
             srcDirs = ["tst"]
-            compileClasspath += toPackageClasspath
-            runtimeClasspath += compileClasspath
         }
 
         output.classesDir "bin/tst"
+        compileClasspath += toPackageClasspath
+        runtimeClasspath += compileClasspath
     }
 }
 
