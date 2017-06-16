@@ -88,17 +88,21 @@ sourceSets {
             srcDir "src"
         }
 
-        resources {
-            srcDir "src"
-        }
-
         //Leads to a dir structure of "checker-framework-inference/bin/checkers/...classes...
-        output.classesDir "bin"
+        output.classesDir "bin/src"
         compileClasspath += toPackageClasspath
-        compileClasspath += files("bin")
     }
 
-    // TODO: add test src path when have unit tests
+
+    test {
+        java {
+            srcDirs = ["tst"]
+            compileClasspath += toPackageClasspath
+            runtimeClasspath += compileClasspath
+        }
+
+        output.classesDir "bin/tst"
+    }
 }
 
 //Switch the Javac used to the JSR308
@@ -115,8 +119,9 @@ tasks.compileJava {
 }
 
 tasks.clean {
-    delete += "bin"
-    delete += "dist"
+    delete 'bin', 'dist', 'testTmp', 'annotated',
+            fileTree('.') { include '**/*.jaif',  '**/*.txt'},
+            fileTree('testinput') {include '**/*.class'}
 }
 
 libsDirName="../dist"

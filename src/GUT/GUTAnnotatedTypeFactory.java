@@ -36,6 +36,7 @@ import org.checkerframework.framework.type.treeannotator.TreeAnnotator;
 import org.checkerframework.framework.type.typeannotator.ListTypeAnnotator;
 import org.checkerframework.framework.type.typeannotator.TypeAnnotator;
 import org.checkerframework.framework.util.AnnotatedTypes;
+import org.checkerframework.framework.util.ViewpointAdaptor;
 import org.checkerframework.javacutil.AnnotationUtils;
 import org.checkerframework.javacutil.Pair;
 import org.checkerframework.javacutil.TreeUtils;
@@ -101,6 +102,11 @@ public class GUTAnnotatedTypeFactory extends BaseAnnotatedTypeFactory {
             type.replaceAnnotation(SELF);
         }
         return type;
+    }
+
+    @Override
+    protected ViewpointAdaptor<?> createViewpointAdaptor() {
+        return new GUTViewpointAdaptor();
     }
 
     /**

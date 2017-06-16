@@ -14,5 +14,5 @@
 	<classpathentry kind="lib" path="/checker-framework-inference/dist/org.ow2.sat4j.pb-2.3.4.jar"/>
 	<classpathentry kind="lib" path="/checker-framework-inference/dist/plume.jar"/>
 	<classpathentry kind="lib" path="/framework/tests/junit-4.12.jar"/>
-	<classpathentry kind="output" path="bin"/>
+	<classpathentry kind="output" path="bin/src"/>
 </classpath>

@@ -10,7 +10,7 @@ DLJC="$JSR308"/do-like-javac
 export AFU="$JSR308"/annotation-tools/annotation-file-utilities
 export PATH="$PATH":"$AFU"/scripts
 
-export CLASSPATH="$JSR308"/universe/bin:"$JSR308"/generic-type-inference-solver/bin
+export CLASSPATH="$JSR308"/universe/bin/src:"$JSR308"/generic-type-inference-solver/bin
 
 
 #parsing build command of the target program

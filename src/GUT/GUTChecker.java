@@ -32,11 +32,6 @@ public class GUTChecker extends BaseTypeChecker {
         */
     }
 
-    @Override
-    public boolean withViewpointAdaptation() {
-	return true;
-    }
-
     /* TODO: purity/OaM checking
     @Override
     public boolean isAssignable(AnnotatedTypeMirror varType,

@@ -1,7 +1,7 @@
-### Java ###
+# Java
 *.class
 
-### Gradle ###
+# Gradle
 .gradle
 /build/
 /bin/
@@ -20,6 +20,9 @@
 # Mac
 .DS_Store
 
-### Annotated
+# Annotated
 /annotated/
 *.jaif
+
+# Editor temp files
+*~
