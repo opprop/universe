@@ -1,4 +1,4 @@
-import GUT.quals.Any;
+import GUT.qual.Any;
 
 package java.lang;
 
@@ -14,4 +14,8 @@ package java.util;
 
 class List<X extends @Any Object> {
   void add(X p);
+}
+
+interface Collection<E> {
+    boolean contains(@Any Object o);
 }

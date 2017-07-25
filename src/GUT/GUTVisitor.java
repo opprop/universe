@@ -1,5 +1,17 @@
 package GUT;
 
+import com.sun.source.tree.AssignmentTree;
+import com.sun.source.tree.BlockTree;
+import com.sun.source.tree.ExpressionTree;
+import com.sun.source.tree.MethodInvocationTree;
+import com.sun.source.tree.MethodTree;
+import com.sun.source.tree.ModifiersTree;
+import com.sun.source.tree.NewClassTree;
+import com.sun.source.tree.ParameterizedTypeTree;
+import com.sun.source.tree.Tree;
+import com.sun.source.tree.Tree.Kind;
+import com.sun.source.tree.TypeCastTree;
+import com.sun.source.tree.VariableTree;
 import org.checkerframework.common.basetype.BaseTypeChecker;
 import org.checkerframework.common.basetype.BaseTypeValidator;
 import org.checkerframework.common.basetype.BaseTypeVisitor;
@@ -16,31 +28,17 @@ import org.checkerframework.javacutil.ElementUtils;
 import org.checkerframework.javacutil.Pair;
 import org.checkerframework.javacutil.TreeUtils;
 
-import java.util.List;
-import java.util.Set;
-
 import javax.lang.model.element.AnnotationMirror;
 import javax.lang.model.element.ExecutableElement;
 import javax.lang.model.element.Modifier;
 import javax.lang.model.element.TypeElement;
 import javax.lang.model.type.DeclaredType;
 import javax.lang.model.type.TypeKind;
-
-import com.sun.source.tree.AssignmentTree;
-import com.sun.source.tree.BlockTree;
-import com.sun.source.tree.ExpressionTree;
-import com.sun.source.tree.MethodInvocationTree;
-import com.sun.source.tree.MethodTree;
-import com.sun.source.tree.ModifiersTree;
-import com.sun.source.tree.NewClassTree;
-import com.sun.source.tree.ParameterizedTypeTree;
-import com.sun.source.tree.Tree;
-import com.sun.source.tree.Tree.Kind;
-import com.sun.source.tree.TypeCastTree;
-import com.sun.source.tree.VariableTree;
+import java.util.List;
+import java.util.Set;
 
 /**
- * Type visitor to enforce the GUT type rules.
+ * Type visitor to enforce the gut type rules.
  *
  * @author wmdietl
  */
@@ -90,7 +88,7 @@ public class GUTVisitor extends BaseTypeVisitor<GUTAnnotatedTypeFactory> {
     }
 
     /**
-     * GUT does not use receiver annotations, forbid them.
+     * gut does not use receiver annotations, forbid them.
      */
     @Override
     public Void visitMethod(MethodTree node, Void p) {
@@ -99,7 +97,7 @@ public class GUTVisitor extends BaseTypeVisitor<GUTAnnotatedTypeFactory> {
         if (node.getReceiverParameter() != null &&
                 !node.getReceiverParameter().getModifiers().getAnnotations()
                         .isEmpty()) {
-                    checker.report(Result.failure("uts.receiver.annotations.forbidden"),node);
+                    //checker.report(Result.failure("uts.receiver.annotations.forbidden"),node);
     }
 
         return super.visitMethod(node, p);

@@ -5,6 +5,7 @@ import checkers.inference.InferenceSolution;
 import checkers.inference.model.Serializer;
 import constraintsolver.ConstraintSolver;
 import constraintsolver.Lattice;
+import util.PrintUtils;
 
 import javax.lang.model.element.AnnotationMirror;
 import java.io.File;
@@ -27,7 +28,10 @@ public class GUTIConstraintSolver extends ConstraintSolver {
             result.putAll(inferenceSolutionMap);
         }
         result = inferMissingConstraint(result);
-        writeInferenceResult("gut-inference-result.txt", result);
+        PrintUtils.printResult(result);
+        if (collectStatistic) {
+            writeInferenceResult("gut-inference-----result.txt", result);
+        }
         return new DefaultInferenceSolution(result);
     }
 

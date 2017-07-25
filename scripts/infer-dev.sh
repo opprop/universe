@@ -4,8 +4,5 @@
 export MYDIR=`dirname $0`
 . ./$MYDIR/setup.sh
 
-# dist directory of CheckerFramework Inference
-distDir=$CFI/dist
-
-# Start the inference: jar files are used when making inference
-$CFI/scripts/inference-dev --checker GUTI.GUTIChecker --solver GUTI.GUTIConstraintSolver $*
+# Start the inference-dev
+$CFI/scripts/inference-dev --checker GUTI.GUTIChecker --solver GUTI.GUTIConstraintSolver --solverArgs=useGraph=false --hacks=true --afuOutputDir=./annotated -m ROUNDTRIP $*

@@ -1,11 +1,11 @@
 import GUT.qual.*;
 
-class D<T extends Object>{
-
-}
-
 public class TypeVariableUse{
-	//:: fixable-error: (assignment.type.incompatible)
-	D<String> D = new @Rep D<@Any String>();
 
+	void foo() {
+		//:: fixable-error: (assignment.type.incompatible) :: fixable-error: (uts.vplost.in.bounds)
+		D<String> D = new @Peer D<@Rep String>();
+	}
+
+	class D<T extends Object>{}
 }

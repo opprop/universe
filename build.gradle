@@ -80,6 +80,8 @@ dependencies {
     compile 'org.ow2.sat4j:org.ow2.sat4j.core:2.3.4'
     compile 'org.ow2.sat4j:org.ow2.sat4j.maxsat:2.3.4'
     compile group: 'junit', name: 'junit', version: '4.12'
+    compile group: 'log4j', name: 'log4j', version: '1.2.16'
+    compile 'commons-logging:commons-logging:1.2'
 }
 
 sourceSets {

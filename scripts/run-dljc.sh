@@ -10,7 +10,7 @@ DLJC="$JSR308"/do-like-javac
 export AFU="$JSR308"/annotation-tools/annotation-file-utilities
 export PATH="$PATH":"$AFU"/scripts
 
-export CLASSPATH="$JSR308"/universe/bin/src:"$JSR308"/generic-type-inference-solver/bin
+export CLASSPATH=.:"$JSR308"/universe/bin/src:"$JSR308"/generic-type-inference-solver/bin
 
 
 #parsing build command of the target program
@@ -23,7 +23,7 @@ do
 done
 
 cd "$WORKING_DIR"
-running_cmd="python $DLJC/dljc -t inference --checker GUTI.GUTIChecker --solver GUTI.GUTIConstraintSolver --solverArgs=\"collectStatistic=true\" -o logs -m ROUNDTRIP -afud $WORKING_DIR/annotated -- $build_cmd "
+running_cmd="python $DLJC/dljc -t inference --checker GUTI.GUTIChecker --solver GUTI.GUTIConstraintSolver --solverArgs=\"collectStatistic=true,useGraph=false\" -m ROUNDTRIP -afud ./annotated -- $build_cmd "
 echo "============ Important variables ============="
 echo "JSR308: $JSR308"
 echo "CLASSPATH: $CLASSPATH"

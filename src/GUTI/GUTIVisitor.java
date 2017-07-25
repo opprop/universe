@@ -1,43 +1,13 @@
 package GUTI;
 
-import java.util.List;
-import java.util.Set;
-
-import javax.lang.model.element.AnnotationMirror;
-import javax.lang.model.element.ExecutableElement;
-import javax.lang.model.element.TypeElement;
-import javax.lang.model.type.DeclaredType;
-
-import org.checkerframework.common.basetype.BaseAnnotatedTypeFactory;
-import org.checkerframework.common.basetype.BaseTypeChecker;
-import org.checkerframework.framework.source.Result;
-import org.checkerframework.framework.type.AnnotatedTypeFactory;
-import org.checkerframework.framework.type.AnnotatedTypeMirror;
-import org.checkerframework.framework.type.AnnotatedTypeMirror.AnnotatedArrayType;
-import org.checkerframework.framework.type.AnnotatedTypeMirror.AnnotatedDeclaredType;
-import org.checkerframework.framework.type.AnnotatedTypeMirror.AnnotatedExecutableType;
-import org.checkerframework.framework.type.AnnotatedTypeMirror.AnnotatedPrimitiveType;
-import org.checkerframework.framework.type.AnnotatedTypeParameterBounds;
-import org.checkerframework.framework.util.AnnotatedTypes;
-import org.checkerframework.javacutil.ElementUtils;
-import org.checkerframework.javacutil.Pair;
-import org.checkerframework.javacutil.TreeUtils;
-
-import com.sun.source.tree.AssignmentTree;
-import com.sun.source.tree.BlockTree;
-import com.sun.source.tree.ExpressionTree;
-import com.sun.source.tree.InstanceOfTree;
-import com.sun.source.tree.MethodInvocationTree;
-import com.sun.source.tree.MethodTree;
-import com.sun.source.tree.NewClassTree;
-import com.sun.source.tree.ParameterizedTypeTree;
-import com.sun.source.tree.Tree;
-import com.sun.source.tree.TypeCastTree;
-import com.sun.source.tree.VariableTree;
-import com.sun.source.util.TreePath;
-
-import GUT.GUTAnnotatedTypeFactory;
 import GUT.GUTChecker;
+import GUT.qual.Any;
+import GUT.qual.Bottom;
+import GUT.qual.Lost;
+import GUT.qual.Peer;
+import GUT.qual.Rep;
+import GUT.qual.Self;
+import GUT.qual.VPLost;
 import checkers.inference.InferenceChecker;
 import checkers.inference.InferenceMain;
 import checkers.inference.InferenceValidator;
@@ -47,20 +17,61 @@ import checkers.inference.model.ConstantSlot;
 import checkers.inference.model.ConstraintManager;
 import checkers.inference.model.Slot;
 import checkers.inference.model.VariableSlot;
+import com.sun.source.tree.AssignmentTree;
+import com.sun.source.tree.BlockTree;
+import com.sun.source.tree.ExpressionTree;
+import com.sun.source.tree.InstanceOfTree;
+import com.sun.source.tree.LiteralTree;
+import com.sun.source.tree.MethodInvocationTree;
+import com.sun.source.tree.MethodTree;
+import com.sun.source.tree.NewClassTree;
+import com.sun.source.tree.ParameterizedTypeTree;
+import com.sun.source.tree.Tree;
+import com.sun.source.tree.Tree.Kind;
+import com.sun.source.tree.TypeCastTree;
+import com.sun.source.tree.VariableTree;
+import com.sun.source.util.TreePath;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+import org.checkerframework.common.basetype.BaseAnnotatedTypeFactory;
+import org.checkerframework.common.basetype.BaseTypeChecker;
+import org.checkerframework.dataflow.qual.Pure;
+import org.checkerframework.framework.source.Result;
+import org.checkerframework.framework.type.AnnotatedTypeFactory;
+import org.checkerframework.framework.type.AnnotatedTypeMirror;
+import org.checkerframework.framework.type.AnnotatedTypeMirror.AnnotatedArrayType;
+import org.checkerframework.framework.type.AnnotatedTypeMirror.AnnotatedDeclaredType;
+import org.checkerframework.framework.type.AnnotatedTypeMirror.AnnotatedExecutableType;
+import org.checkerframework.framework.type.AnnotatedTypeParameterBounds;
+import org.checkerframework.framework.util.AnnotatedTypes;
+import org.checkerframework.javacutil.AnnotationUtils;
+import org.checkerframework.javacutil.ElementUtils;
+import org.checkerframework.javacutil.Pair;
+import org.checkerframework.javacutil.TreeUtils;
+
+import javax.lang.model.element.AnnotationMirror;
+import javax.lang.model.element.Element;
+import javax.lang.model.element.ElementKind;
+import javax.lang.model.element.ExecutableElement;
+import javax.lang.model.element.TypeElement;
+import javax.lang.model.type.DeclaredType;
+import java.util.List;
 
 /**
- * Type visitor to either enforce or infer the GUT type rules.
+ * Type visitor to either enforce or infer the gut type rules.
  *
  * @author wmdietl
  */
 public class GUTIVisitor extends InferenceVisitor<GUTIChecker, BaseAnnotatedTypeFactory> {
 
+    public static final Log logger = LogFactory.getLog(GUTIVisitor.class.getSimpleName());
+
+    public AnnotationMirror ANY, PEER, REP, LOST, VPLOST, SELF, BOTTOM, PURE;
+
     private final boolean checkOaM;
     private final boolean checkStrictPurity;
     private final boolean allowLost;
     private final boolean warn_staticpeer;
-
-    private final GUTAnnotatedTypeFactory gutATF;
 
     /*
      * We continue to use BaseTypeChecker as first parameter type, because this
@@ -75,10 +86,16 @@ public class GUTIVisitor extends InferenceVisitor<GUTIChecker, BaseAnnotatedType
 
         String warn = checker.getOption("warn", "");
         warn_staticpeer = warn.contains("staticpeer");
-
-        this.gutATF = (GUTAnnotatedTypeFactory) InferenceMain.getInstance().getRealTypeFactory();
         // System.out.println("gutATF in constructor is: " + this.gutATF);
 
+        ANY = AnnotationUtils.fromClass(elements, Any.class);
+        PEER = AnnotationUtils.fromClass(elements, Peer.class);
+        REP = AnnotationUtils.fromClass(elements, Rep.class);
+        LOST = AnnotationUtils.fromClass(elements, Lost.class);
+        VPLOST = AnnotationUtils.fromClass(elements, VPLost.class);
+        SELF = AnnotationUtils.fromClass(elements, Self.class);
+        BOTTOM = AnnotationUtils.fromClass(elements, Bottom.class);
+        PURE = AnnotationUtils.fromClass(elements, Pure.class);
     }
 
     /**
@@ -98,7 +115,8 @@ public class GUTIVisitor extends InferenceVisitor<GUTIChecker, BaseAnnotatedType
         /*
         GUTAnnotatedTypeFactory gutATFParameter = (GUTAnnotatedTypeFactory) InferenceMain.getInstance().getRealTypeFactory();
         return new GUTIInferenceValidator(checker, this, gutATFParameter);*/
-        return new GUTIInferenceValidator(checker, this, this.atypeFactory);
+        //return new GUTIInferenceValidator(checker, this, atypeFactory);
+        return new GUTIInferenceValidator(checker, this, atypeFactory);
     }
 
     // TODO: find a nicer way to set preferences
@@ -106,27 +124,62 @@ public class GUTIVisitor extends InferenceVisitor<GUTIChecker, BaseAnnotatedType
     public Void visitVariable(VariableTree node, Void p) {
         AnnotatedTypeMirror type = atypeFactory.getAnnotatedType(node);
         if (node.getInitializer() != null) {
-            doesNotContain(type, gutATF.LOST, "uts.lost.lhs", node);
-            doesNotContain(type, gutATF.VPLOST, "uts.vplost.lhs", node);
+            doesNotContain(type, LOST, "uts.lost.lhs", node);
+            doesNotContain(type, VPLOST, "uts.vplost.lhs", node);
         }
+        Element element = TreeUtils.elementFromDeclaration(node);
+        if (element.getKind() == ElementKind.PARAMETER) {
+            doesNotContain(type, LOST, "uts.lost.lhs", node);
+            doesNotContain(type, VPLOST, "uts.vplost.lhs", node);
+            if (!element.getSimpleName().contentEquals("this")) {
+                // Generate inequality constraint if this is a normal parameter tree(non receiver tree)
+                doesNotContain(type, SELF, "uts.vplost.lhs", node);
+            }
+        }
+        if (element.getKind() == ElementKind.FIELD) {
+            doesNotContain(type, LOST, "uts.lost.lhs", node);
+            doesNotContain(type, VPLOST, "uts.vplost.lhs", node);
+            doesNotContain(type, SELF, "uts.vplost.lhs", node);
+        }
+        if (node.getType().getKind() != Kind.PRIMITIVE_TYPE) {
+            mainIsNot(type, BOTTOM, "uts.vplost.lhs", node);
+        }
+
+///*        InferenceMain inferenceMain = new InferenceMain();
+//        inferenceMain.recordInferenceCheckerInstance((InferenceChecker) checker);*/
         ConstraintManager cm = InferenceMain.getInstance().getConstraintManager();
         SlotManager sm = InferenceMain.getInstance().getSlotManager();
         Slot s = sm.getVariableSlot(type);
         if (s instanceof VariableSlot) {
             VariableSlot vs = (VariableSlot) s;
-            ConstantSlot rep = InferenceMain.getInstance().getSlotManager().createConstantSlot(gutATF.REP);
+            ConstantSlot rep = sm.createConstantSlot(REP);
             cm.addPreferenceConstraint(vs, rep, 80);
         }
         return super.visitVariable(node, p);
     }
 
     /**
-     * GUT does not use receiver annotations, forbid them.
+     * gut does not use receiver annotations, forbid them.
      */
     @Override
     public Void visitMethod(MethodTree node, Void p) {
         // System.out.println("MethodTree: " + node);
-
+        /*Tree receiver = node.getReceiverParameter();
+        if (receiver != null) {
+            AnnotatedTypeMirror type = atypeFactory.getAnnotatedType(receiver);
+            ConstraintManager cm = InferenceMain.getInstance().getConstraintManager();
+            SlotManager sm = InferenceMain.getInstance().getSlotManager();
+            VariableSlot variableSlot = sm.getVariableSlot(type);
+            cm.addEqualityConstraint(variableSlot, sm.getSlot(SELF));
+        }*/
+        /*if (TreeUtils.isConstructor(node)) {
+            Tree returnTree = node.getReturnType();
+            AnnotatedTypeMirror returnType = atypeFactory.getAnnotatedType(returnTree);
+            mainIs(returnType, SELF, "uts.lost.lhs", returnTree);
+        } else {
+            VariableTree receiverParameter = node.getReceiverParameter();
+            mainIs(atypeFactory.getAnnotatedType(receiverParameter), SELF, "uts.lost.lhs", receiverParameter);
+        }*/
         /* TODO:
         if (!node.getReceiverAnnotations().isEmpty()) {
             checker.report(Result.failure("uts.receiver.annotations.forbidden"), node);
@@ -142,6 +195,11 @@ public class GUTIVisitor extends InferenceVisitor<GUTIChecker, BaseAnnotatedType
     @Override
     protected void checkMethodInvocability(AnnotatedExecutableType method, MethodInvocationTree node) {
         return;
+    }
+
+    @Override
+    public Void visitLiteral(LiteralTree node, Void aVoid) {
+        return super.visitLiteral(node, aVoid);
     }
 
     /**
@@ -172,18 +230,19 @@ public class GUTIVisitor extends InferenceVisitor<GUTIChecker, BaseAnnotatedType
 
         // Check for @Lost and @VPLost in combined parameter types.
         for (AnnotatedTypeMirror parameterType : constructor.getParameterTypes()) {
-            doesNotContain(parameterType, gutATF.LOST, "uts.lost.parameter", node);
-            doesNotContain(parameterType, gutATF.VPLOST, "uts.vplost.parameter", node);
+            doesNotContain(parameterType, LOST, "uts.lost.parameter", node);
+            doesNotContain(parameterType, VPLOST, "uts.vplost.parameter", node);
         }
 
         // Check for @Peer or @Rep as top-level modifier.
         AnnotatedTypeMirror type = atypeFactory.getAnnotatedType(node);
-        mainIsNoneOf(type, new AnnotationMirror[] { gutATF.LOST, gutATF.VPLOST,
-                gutATF.ANY }, "uts.new.ownership", node);
+        mainIsNoneOf(type, new AnnotationMirror[] { LOST, VPLOST,
+                ANY }, "uts.new.ownership", node);
+        mainIsNoneOf(type, new AnnotationMirror[] { BOTTOM, SELF }, "uts.new.ownership", node);
 
         // Forbid rep in static context
         if (isContextStatic(atypeFactory.getPath(node))) {
-            doesNotContain(type, gutATF.REP, "uts.static.rep.forbidden", node);
+            doesNotContain(type, REP, "uts.static.rep.forbidden", node);
         }
 
         return super.visitNewClass(node, p);
@@ -225,11 +284,15 @@ public class GUTIVisitor extends InferenceVisitor<GUTIChecker, BaseAnnotatedType
     @Override
     public Void visitMethodInvocation(MethodInvocationTree node, Void p) {
         assert node != null;
+
+        /*AnnotatedTypeMirror receiver = atypeFactory.getReceiverType(node);
+        doesNotContain(receiver, new AnnotationMirror[]{VPLOST, LOST}, "uts.lost.receiver", node);*/
+
         AnnotatedExecutableType method = atypeFactory.methodFromUse(node).first;
         // Check for @Lost and @VPLost in combined parameter types.
         for (AnnotatedTypeMirror parameterType : method.getParameterTypes()) {
-            doesNotContain(parameterType, gutATF.LOST, "uts.lost.parameter", node);
-            doesNotContain(parameterType, gutATF.VPLOST, "uts.lost.parameter", node);
+            doesNotContain(parameterType, LOST, "uts.lost.parameter", node);
+            doesNotContain(parameterType, VPLOST, "uts.lost.parameter", node);
         }
 
         if (checkOaM) {
@@ -240,7 +303,7 @@ public class GUTIVisitor extends InferenceVisitor<GUTIChecker, BaseAnnotatedType
                 if (recvType != null) {
                     ExecutableElement exelem = TreeUtils.elementFromUse(node);
                     if (!hasPure(exelem)) {
-                        mainIsNoneOf(recvType, new AnnotationMirror[] {gutATF.LOST, gutATF.ANY},
+                        mainIsNoneOf(recvType, new AnnotationMirror[] {LOST, VPLOST, ANY},
                                 "oam.call.forbidden", node);
                     }
                 }
@@ -283,8 +346,8 @@ public class GUTIVisitor extends InferenceVisitor<GUTIChecker, BaseAnnotatedType
         assert node != null;
         AnnotatedTypeMirror type = atypeFactory.getAnnotatedType(node.getVariable());
         // Check for @Lost and @VPLost in left hand side of assignment.
-        doesNotContain(type, gutATF.LOST, "uts.lost.lhs", node);
-        doesNotContain(type, gutATF.VPLOST, "uts.vplost.lhs", node);
+        doesNotContain(type, LOST, "uts.lost.lhs", node);
+        doesNotContain(type, VPLOST, "uts.vplost.lhs", node);
 
         if (checkOaM) {
             ExpressionTree recvTree = TreeUtils.getReceiverTree(node.getVariable());
@@ -294,7 +357,7 @@ public class GUTIVisitor extends InferenceVisitor<GUTIChecker, BaseAnnotatedType
                 if (recvType != null) {
                     // TODO: do we need to treat "this" and "super" specially?
                     mainIsNoneOf(recvType,
-                            new AnnotationMirror[] { gutATF.LOST, gutATF.VPLOST, gutATF.ANY },
+                            new AnnotationMirror[] { LOST, VPLOST, ANY },
                             "oam.assignment.forbidden", node);
                 }
             }
@@ -313,12 +376,13 @@ public class GUTIVisitor extends InferenceVisitor<GUTIChecker, BaseAnnotatedType
         AnnotatedTypeMirror exprty = atypeFactory.getAnnotatedType(node.getExpression());
 
         /* TODO: this warning will only be useful in type checking mode.
-         * Would it be helpful to somehow support such warnings for type inference, e.g.
+         * Would it be helpful to somehow support such warnings for type inference----, e.g.
          * by reducing weighting?
          */
-        if ((AnnotatedTypes.containsModifier(castty, gutATF.LOST) ||
-                AnnotatedTypes.containsModifier(castty, gutATF.VPLOST) ||
-                    AnnotatedTypes.containsModifier(castty, gutATF.ANY)) &&
+        //doesNotContain(castty, new AnnotationMirror[]{LOST, VPLOST}, "uts.cast.type.warning", node);
+        if ((AnnotatedTypes.containsModifier(castty, LOST) ||
+                AnnotatedTypes.containsModifier(castty, VPLOST) ||
+                    AnnotatedTypes.containsModifier(castty, ANY)) &&
                         !GUTChecker.isAnyDefault(castty)) {
             checker.report(Result.warning("uts.cast.type.warning", castty), node);
             // checker.getProcessingEnvironment().getMessager().printMessage(javax.tools.Diagnostic.Kind.WARNING,
@@ -342,9 +406,9 @@ public class GUTIVisitor extends InferenceVisitor<GUTIChecker, BaseAnnotatedType
         AnnotatedTypeMirror exprty = atypeFactory.getAnnotatedType(node.getExpression());
 
         // TODO: See comment at casts above.
-        if ((AnnotatedTypes.containsModifier(ioty, gutATF.LOST) ||
-                AnnotatedTypes.containsModifier(ioty, gutATF.VPLOST) ||
-                    AnnotatedTypes.containsModifier(ioty, gutATF.ANY)) &&
+        if ((AnnotatedTypes.containsModifier(ioty, LOST) ||
+                AnnotatedTypes.containsModifier(ioty, VPLOST) ||
+                    AnnotatedTypes.containsModifier(ioty, ANY)) &&
                         !GUTChecker.isAnyDefault(ioty)) {
             checker.report(Result.warning("uts.instanceof.type.warning", ioty), node);
             // checker.getProcessingEnvironment().getMessager().printMessage(javax.tools.Diagnostic.Kind.WARNING,
@@ -356,9 +420,13 @@ public class GUTIVisitor extends InferenceVisitor<GUTIChecker, BaseAnnotatedType
         return super.visitInstanceOf(node, p);
     }
 
-    /* TODO: what do we want to enforce for strings? They don't really matter anyway.
     @Override
-    public Void visitBinary(BinaryTree node, Void p) {
+    public boolean isValidUse(AnnotatedDeclaredType declarationType, AnnotatedDeclaredType useType, Tree tree) {
+        return true;
+    }
+/* TODO: what do we want to enforce for strings? They don't really matter anyway.
+    @Override
+    public Void visitBinary( node, Void p) {
         if (node.getKind() == Kind.PLUS || node.getKind() == Kind.PLUS_ASSIGNMENT) {
             // TODO: only for Strings, but adding it for primitives shouldn't be a problem
 
@@ -415,19 +483,20 @@ public class GUTIVisitor extends InferenceVisitor<GUTIChecker, BaseAnnotatedType
             // System.out.println("----------------atypeFactory.getPath(p) is: "
             // + atypeFactory.getPath(p));
             if (GUTIVisitor.isContextStatic(atypeFactory.getPath(p))) {
-                doesNotContain(type, gutATF.REP, "uts.static.rep.forbidden", p);
+                doesNotContain(type, REP, "uts.static.rep.forbidden", p);
             
                 if (warn_staticpeer) {
                     // TODO: I would really like to only give the warning if
                     // the modifier was explicit.
                     // TODO: Only want a warning, not an error.
-                    doesNotContain(type, gutATF.PEER, "uts.static.peer.warning", p);
+                    doesNotContain(type, PEER, "uts.static.peer.warning", p);
                 }
             }
 
             if (!allowLost) {
-                doesNotContain(type, gutATF.LOST, "uts.explicit.lost.forbidden", p);
-                doesNotContain(type, gutATF.VPLOST, "uts.explicit.lost.forbidden", p);
+                doesNotContain(type, LOST, "uts.explicit.lost.forbidden", p);
+                // We allow vplost in declared type, for example method return type
+                //doesNotContain(type, VPLOST, "uts.explicit.lost.forbidden", p);
             }
             // Me: Is it allowed to have multiple universe modifiers? What does
             // it mean?
@@ -452,14 +521,14 @@ public class GUTIVisitor extends InferenceVisitor<GUTIChecker, BaseAnnotatedType
             final TypeElement element = (TypeElement) type.getUnderlyingType().asElement();
             List<AnnotatedTypeParameterBounds> typeParamBounds = atypeFactory.typeVariablesFromUse(type, element);
             for (AnnotatedTypeParameterBounds atpb : typeParamBounds) {
-                doesNotContain(atpb.getLowerBound(), gutATF.LOST, "uts.lost.in.bounds", tree);
-                doesNotContain(atpb.getUpperBound(), gutATF.LOST, "uts.lost.in.bounds", tree);
-                doesNotContain(atpb.getLowerBound(), gutATF.VPLOST, "uts.vplost.in.bounds", tree);
-                doesNotContain(atpb.getUpperBound(), gutATF.VPLOST, "uts.vplost.in.bounds", tree);
+                doesNotContain(atpb.getLowerBound(), LOST, "uts.lost.in.bounds", tree);
+                doesNotContain(atpb.getUpperBound(), LOST, "uts.lost.in.bounds", tree);
+                doesNotContain(atpb.getLowerBound(), VPLOST, "uts.vplost.in.bounds", tree);
+                doesNotContain(atpb.getUpperBound(), VPLOST, "uts.vplost.in.bounds", tree);
             }
             for(AnnotatedTypeMirror atm: type.getTypeArguments()){
-                doesNotContain(atm, gutATF.LOST,"uts.lost.in.type.arguments",tree);
-                doesNotContain(atm, gutATF.VPLOST,"uts.lost.in.type.arguments",tree);
+                doesNotContain(atm, LOST,"uts.lost.in.type.arguments",tree);
+                doesNotContain(atm, VPLOST,"uts.lost.in.type.arguments",tree);
             }
             // For debugging purpose, move the following line to first. To see if super not overridden
             // method works or not.
@@ -474,20 +543,34 @@ public class GUTIVisitor extends InferenceVisitor<GUTIChecker, BaseAnnotatedType
         /**
          * Forbid explicit annotations on primitive types.
          */
-        @Override
+        /*@Override
         public Void visitPrimitive(AnnotatedPrimitiveType type, Tree p) {
-            if (type.isAnnotatedInHierarchy(gutATF.ANY)) {
+            try {
+                SlotManager slotManager = InferenceMain.getInstance().getSlotManager();
+                ConstraintManager constraintManager = InferenceMain.getInstance().getConstraintManager();
+                VariableSlot variableSlot = slotManager.getVariableSlot(type);
+                constraintManager.addEqualityConstraint(variableSlot, slotManager.getSlot(BOTTOM));
+                logger.info("Added equality constraint between @Bottom and primitive type: " + type + " when visiting tree: \n" + p);
+            } catch (RuntimeException e) {
+                if (e.getMessage().contains("Missing VarAnnot annotation:")) {
+                    logger.fatal(type + " doesn't contain VarAnnot!", e);
+                } else {
+                    logger.fatal("Unknwon runtime exception!", e);
+                }
+                ErrorReporter.errorAbort("Error when getting self type", p);
+            }
+            *//*if (type.isAnnotatedInHierarchy(ANY)) {
                 Set<AnnotationMirror> ann = type.getAnnotations();
                 if (ann.size() > 1
-                        || (ann.size() == 1 && !ann.contains(gutATF.BOTTOM))) {
+                        || (ann.size() == 1 && !ann.contains(BOTTOM))) {
                     // the implicit default is BOTTOM, which cannot be used
                     // explicitly.
                     // if there are explicit annotations -> error.
                     reportError(type, p);
                 }
-            }
+            }*//*
             return super.visitPrimitive(type, p);
-        }
+        }*/
 
         /**
          * Each array dimension can only use at most one ownership modifier. The

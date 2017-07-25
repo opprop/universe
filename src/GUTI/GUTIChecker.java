@@ -1,10 +1,5 @@
 package GUTI;
 
-import javax.annotation.processing.SupportedOptions;
-
-import org.checkerframework.common.basetype.BaseAnnotatedTypeFactory;
-import org.checkerframework.framework.source.SupportedLintOptions;
-
 import GUT.GUTAnnotatedTypeFactory;
 import checkers.inference.BaseInferrableChecker;
 import checkers.inference.InferenceAnnotatedTypeFactory;
@@ -13,6 +8,10 @@ import checkers.inference.InferenceVisitor;
 import checkers.inference.InferrableChecker;
 import checkers.inference.SlotManager;
 import checkers.inference.model.ConstraintManager;
+import org.checkerframework.common.basetype.BaseAnnotatedTypeFactory;
+import org.checkerframework.framework.source.SupportedLintOptions;
+
+import javax.annotation.processing.SupportedOptions;
 
 
 /**
@@ -57,5 +56,11 @@ public class GUTIChecker extends BaseInferrableChecker {
         	withCombineConstraints(), realTypeFactory, realChecker,
                 slotManager, constraintManager);
     }
+
+    @Override
+    public boolean isInsertMainModOfLocalVar() {
+        return true;
+    }
+
 
 }
