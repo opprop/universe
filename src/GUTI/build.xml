@@ -1,7 +1,0 @@
-<?xml version="1.0" ?>
-<!-- Configuration of the Ant build system to generate a Jar file --> 
-<project name="universe" default="CreateJar">
-  <target name="CreateJar" description="Create Jar file">
-        <jar jarfile="../../bin/GUT.jar" basedir="../../bin" includes="*/**/*.class" />
-  </target>
-</project>

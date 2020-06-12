@@ -1,0 +1,130 @@
+apply plugin: 'java'
+
+ext {
+    jsr308 = System.getenv('JSR308') ?: file(new File("..")).absolutePath
+    cfPath = "${jsr308}/checker-framework"
+    cfiPath = "${jsr308}/checker-framework-inference"
+    afu = "${jsr308}/annotation-tools/annotation-file-utilities"
+    universePath = "${jsr308}/universe"
+}
+
+println '==================================='
+println '         Universe Checker          '
+println '==================================='
+println ''
+println '-------------------------------'
+println 'Important Environment Variables'
+println '-------------------------------'
+println 'JSR308: ' + jsr308
+println 'CF:     ' + cfPath
+println 'CFI:    ' + cfiPath
+
+repositories {
+    jcenter()
+    mavenCentral()
+}
+
+dependencies {
+    compile fileTree(dir: "${cfPath}/checker/dist", include: "checker.jar")
+    compile fileTree(dir: "${cfiPath}/dist", include: "checker-framework-inference.jar")
+    compile fileTree(dir: "${cfiPath}/dist", include: "inference-framework-test-lib.jar")
+    // solver backend dependencies
+    // TODO: should be removed when we get rid of classic solver
+    // TODO: currently the runtime dependencies of sat4j is bit tricky --- it actually uses the sat4j from cfi/dist
+    //       should we also snapshot a copy of sat4j from mavenCentral into ontology?
+    compile 'org.ow2.sat4j:org.ow2.sat4j.core:2.3.5'
+    compile 'org.ow2.sat4j:org.ow2.sat4j.maxsat:2.3.5'
+    compile group: 'log4j', name: 'log4j', version: '1.2.16'
+    compile 'commons-logging:commons-logging:1.2'
+    testCompile fileTree(dir: "${cfPath}/framework-test/build/libs", include: "framework-test-*.jar")
+    testCompile 'junit:junit:4.13'
+}
+
+sourceSets {
+    main {
+        java {
+            srcDir "src"
+        }
+
+        resources {
+            srcDir "src"
+            exclude "**/*.java"
+        }
+    }
+
+    test {
+        java {
+            srcDirs = ["tst"]
+        }
+    }
+}
+
+compileJava {
+    options.compilerArgs = [
+            '-implicit:class',
+            '-Awarns',
+            '-Xmaxwarns', '10000',
+    ]
+}
+
+afterEvaluate {
+    // Create a task for each JUnit test class whose name is the same as the JUnit class name.
+    sourceSets.test.allJava.filter { it.path.contains("${universePath}/test") }.forEach { file ->
+        String junitClassName = file.name.replaceAll(".java", "")
+        String testName = junitClassName.replaceAll("Test", "")
+        tasks.create(name: "${junitClassName}", type: Test) {
+            description "Run ${testName} tests."
+            include "**/${name}.class"
+        }
+    }
+
+    // Configure JUnit tests
+    tasks.withType(Test) {
+        group 'Verification'
+
+        systemProperties = [
+                'path.afu.scripts': "${afu}/scripts",
+                'path.inference.script': "${cfiPath}/scripts/inference"
+        ]
+        environment "external_checker_classpath", "$jsr308/universe/bin/src"
+
+
+        if (JavaVersion.current() == JavaVersion.VERSION_1_8) {
+            jvmArgs "-Xbootclasspath/p:${cfiPath}/dist/javac.jar"
+        }
+
+        testLogging {
+            // Always run the tests
+            outputs.upToDateWhen { false }
+            // The following prints out each time a test is passed.
+            events "passed", "skipped", "failed", "standardOut", "standardError"
+
+            // Show the found unexpected diagnostics and expected diagnostics not found.
+            exceptionFormat "full"
+            showExceptions true
+            showCauses true
+            showStackTraces true
+            showStandardStreams true
+        }
+
+        // After each test, print a summary.
+        afterSuite { desc, result ->
+            if (desc.getClassName() != null) {
+                long mils = result.getEndTime() - result.getStartTime()
+                double seconds = mils / 1000.0
+
+                println "Testsuite: ${desc.getClassName()}\n" +
+                        "Tests run: ${result.testCount}, " +
+                        "Failures: ${result.failedTestCount}, " +
+                        "Skipped: ${result.skippedTestCount}, " +
+                        "Time elapsed: ${seconds} sec\n"
+            }
+        }
+    }
+}
+
+tasks.clean {
+    delete 'bin', 'dist', 'testTmp', 'annotated',
+            fileTree('.') { include '**/*.jaif',  '**/*.txt'},
+            fileTree('testinput') {include '**/*.class'}
+}
