@@ -43,7 +43,6 @@ public class GUTValidator extends InferenceValidator {
     public Void visitDeclared(AnnotatedTypeMirror.AnnotatedDeclaredType type, Tree p) {
         checkImplicitlyBottomTypeError(type, p);
         checkStaticRepError(type, p);
-        checkConflictingPrimaryAnnos(type, p);
         // @Peer is allowed in static context
 
         // This will be handled at higher level
