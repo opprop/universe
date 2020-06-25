@@ -7,7 +7,7 @@ import checkers.inference.model.ConstraintManager;
 import checkers.inference.model.Slot;
 import com.sun.source.tree.ClassTree;
 import com.sun.source.util.TreePath;
-import org.checkerframework.framework.qual.ImplicitFor;
+import org.checkerframework.framework.qual.DefaultFor;
 import org.checkerframework.framework.type.AnnotatedTypeMirror;
 import org.checkerframework.javacutil.TreeUtils;
 import org.checkerframework.javacutil.TypesUtils;
@@ -27,24 +27,24 @@ import static universe.GUTChecker.SELF;
 
 public class GUTTypeUtil {
 
-    private static boolean isInTypesOfImplicitForOfBottom(AnnotatedTypeMirror atm) {
-        ImplicitFor implicitFor = Bottom.class.getAnnotation(ImplicitFor.class);
-        assert implicitFor != null;
-        assert implicitFor.types() != null;
-        for (org.checkerframework.framework.qual.TypeKind typeKind : implicitFor.types()) {
+    private static boolean isInTypesOfDefaultForOfBottom(AnnotatedTypeMirror atm) {
+        DefaultFor defaultFor = Bottom.class.getAnnotation(DefaultFor.class);
+        assert defaultFor != null;
+        assert defaultFor.typeKinds() != null;
+        for (org.checkerframework.framework.qual.TypeKind typeKind : defaultFor.typeKinds()) {
             if (TypeKind.valueOf(typeKind.name()) == atm.getKind()) return true;
         }
         return false;
     }
 
-    private static boolean isInTypeNamesOfImplicitForOfBottom(AnnotatedTypeMirror atm) {
+    private static boolean isInTypeNamesOfDefaultForOfBottom(AnnotatedTypeMirror atm) {
         if (atm.getKind() != TypeKind.DECLARED) {
             return false;
         }
-        ImplicitFor implicitFor = Bottom.class.getAnnotation(ImplicitFor.class);
-        assert implicitFor != null;
-        assert implicitFor.typeNames() != null;
-        Class<?>[] typeNames = implicitFor.typeNames();
+        DefaultFor defaultFor = Bottom.class.getAnnotation(DefaultFor.class);
+        assert defaultFor != null;
+        assert defaultFor.types() != null;
+        Class<?>[] typeNames = defaultFor.types();
         String fqn = TypesUtils.getQualifiedName((DeclaredType) atm.getUnderlyingType()).toString();
         for (int i = 0; i < typeNames.length; i++) {
             if (typeNames[i].getCanonicalName().toString().contentEquals(fqn)) return true;
@@ -53,7 +53,7 @@ public class GUTTypeUtil {
     }
 
     public static boolean isImplicitlyBottomType(AnnotatedTypeMirror atm) {
-        return isInTypesOfImplicitForOfBottom(atm) || isInTypeNamesOfImplicitForOfBottom(atm);
+        return isInTypesOfDefaultForOfBottom(atm) || isInTypeNamesOfDefaultForOfBottom(atm);
     }
 
     public static void applyConstant(AnnotatedTypeMirror type, AnnotationMirror am) {

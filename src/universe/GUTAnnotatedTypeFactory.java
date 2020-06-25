@@ -3,9 +3,9 @@ package universe;
 import com.sun.source.tree.ExpressionTree;
 import com.sun.source.tree.MethodTree;
 import org.checkerframework.framework.type.AnnotatedTypeFactory;
-import org.checkerframework.framework.type.treeannotator.ImplicitsTreeAnnotator;
+import org.checkerframework.framework.type.treeannotator.LiteralTreeAnnotator;
 import org.checkerframework.framework.type.treeannotator.PropagationTreeAnnotator;
-import org.checkerframework.framework.type.typeannotator.ImplicitsTypeAnnotator;
+import org.checkerframework.framework.type.typeannotator.DefaultForTypeAnnotator;
 import org.checkerframework.javacutil.Pair;
 import universe.qual.Any;
 import universe.qual.Bottom;
@@ -89,7 +89,7 @@ public class GUTAnnotatedTypeFactory extends BaseAnnotatedTypeFactory {
     protected TreeAnnotator createTreeAnnotator() {
         return new ListTreeAnnotator(
                 new GUTPropagationTreeAnnotator(this),
-                new ImplicitsTreeAnnotator(this),
+                new LiteralTreeAnnotator(this),
                 new GUTTreeAnnotator()
                 );
     }
@@ -162,7 +162,7 @@ public class GUTAnnotatedTypeFactory extends BaseAnnotatedTypeFactory {
 
     private class GUTPropagationTreeAnnotator extends PropagationTreeAnnotator {
         /**
-         * Creates a {@link ImplicitsTypeAnnotator}
+         * Creates a {@link DefaultForTypeAnnotator}
          * from the given checker, using that checker's type hierarchy.
          *
          * @param atypeFactory
@@ -261,7 +261,7 @@ public class GUTAnnotatedTypeFactory extends BaseAnnotatedTypeFactory {
             return super.visitTypeCast(node, type);
         }
 
-        /**Because TreeAnnotator runs before ImplicitsTypeAnnotator, implicitly immutable types are not guaranteed
+        /**Because TreeAnnotator runs before DefaultForTypeAnnotator, implicitly immutable types are not guaranteed
          to always have immutable annotation. If this happens, we manually add immutable to type. We use
          addMissingAnnotations because we want to respect existing annotation on type*/
         private void applyImmutableIfImplicitlyBottom(AnnotatedTypeMirror type) {
