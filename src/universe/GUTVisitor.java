@@ -86,9 +86,9 @@ public class GUTVisitor extends InferenceVisitor<GUTChecker, BaseAnnotatedTypeFa
      * Ignore constructor receiver annotations.
      */
     @Override
-    protected boolean checkConstructorInvocation(AnnotatedDeclaredType dt,
-                                                 AnnotatedExecutableType constructor, NewClassTree src) {
-        return true;
+    protected void checkConstructorInvocation(AnnotatedDeclaredType dt,
+                                              AnnotatedExecutableType constructor, NewClassTree src) {
+        return;
     }
 
     @Override
@@ -369,7 +369,8 @@ public class GUTVisitor extends InferenceVisitor<GUTChecker, BaseAnnotatedTypeFa
             // Special handling for case with two ConstantSlots: even though they may not be comparable,
             // but to infer more program, let this case fall back to "anycast" silently and continue
             // inference.
-            return constraintManager.getConstraintVerifier().areComparable(castCSSlot, exprCSSlot);
+            return constraintManager.addSubtypeConstraintNoErrorMsg(castCSSlot, exprCSSlot) ||
+                constraintManager.addSubtypeConstraintNoErrorMsg(exprCSSlot, castCSSlot);
         } else {
             // But if there is at least on VariableSlot, PICOInfer guarantees that solutions don't include
             // incomparable casts.
@@ -414,7 +415,8 @@ public class GUTVisitor extends InferenceVisitor<GUTChecker, BaseAnnotatedTypeFa
     @Override
     public boolean validateType(Tree tree, AnnotatedTypeMirror type) {
         // basic consistency checks
-        if (!AnnotatedTypes.isValidType(atypeFactory.getQualifierHierarchy(), type)) {
+        BaseTypeValidator validator = new BaseTypeValidator(checker, this, atypeFactory);
+        if (!validator.isValid(type, tree)) {
             if (!infer) {
                 checker.report(
                         Result.failure("type.invalid", type.getAnnotations(), type.toString()), tree);
