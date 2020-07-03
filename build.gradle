@@ -83,7 +83,7 @@ afterEvaluate {
         group 'Verification'
 
         systemProperties = [
-                'path.afu.scripts': "${afu}/scripts",
+                'path.afu.scripts' : "${afu}/scripts",
                 'path.inference.script': "${cfiPath}/scripts/inference"
         ]
         environment "external_checker_classpath", "$jsr308/universe/bin/src"
@@ -125,6 +125,6 @@ afterEvaluate {
 
 tasks.clean {
     delete 'bin', 'dist', 'testTmp', 'annotated',
-            fileTree('.') { include '**/*.jaif',  '**/*.txt'},
-            fileTree('testinput') {include '**/*.class'}
+            fileTree('.') { include '**/*.jaif', '**/*.txt' },
+            fileTree('testinput') { include '**/*.class' }
 }

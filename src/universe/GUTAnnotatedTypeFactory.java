@@ -57,9 +57,9 @@ public class GUTAnnotatedTypeFactory extends BaseAnnotatedTypeFactory {
     public GUTAnnotatedTypeFactory(BaseTypeChecker checker) {
         super(checker, true);
 
-        addAliasedAnnotation(org.jmlspecs.annotation.Peer.class, PEER);
-        addAliasedAnnotation(org.jmlspecs.annotation.Rep.class, REP);
-        addAliasedAnnotation(org.jmlspecs.annotation.Readonly.class, ANY);
+//        addAliasedAnnotation(org.jmlspecs.annotation.Peer.class, PEER);
+//        addAliasedAnnotation(org.jmlspecs.annotation.Rep.class, REP);
+//        addAliasedAnnotation(org.jmlspecs.annotation.Readonly.class, ANY);
 
         this.postInit();
     }
@@ -159,6 +159,10 @@ public class GUTAnnotatedTypeFactory extends BaseAnnotatedTypeFactory {
             return super.visitMethod(node, p);
         }
     }
+    
+    @Override
+    // GUT does not need to inherit from the class declaration
+    protected void annotateInheritedFromClass(AnnotatedTypeMirror type) {}
 
     private class GUTPropagationTreeAnnotator extends PropagationTreeAnnotator {
         /**

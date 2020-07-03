@@ -9,6 +9,7 @@ import checkers.inference.model.ConstraintManager;
 import checkers.inference.model.Slot;
 import checkers.inference.model.VariableSlot;
 import com.sun.source.tree.AssignmentTree;
+import com.sun.source.tree.ClassTree;
 import com.sun.source.tree.ExpressionTree;
 import com.sun.source.tree.InstanceOfTree;
 import com.sun.source.tree.MethodInvocationTree;
@@ -27,6 +28,7 @@ import org.checkerframework.framework.type.AnnotatedTypeFactory.ParameterizedExe
 import org.checkerframework.framework.type.AnnotatedTypeMirror;
 import org.checkerframework.framework.type.AnnotatedTypeMirror.AnnotatedDeclaredType;
 import org.checkerframework.framework.type.AnnotatedTypeMirror.AnnotatedExecutableType;
+import org.checkerframework.framework.type.QualifierHierarchy;
 import org.checkerframework.framework.util.AnnotatedTypes;
 import org.checkerframework.javacutil.Pair;
 import org.checkerframework.javacutil.TreeUtils;
@@ -86,10 +88,8 @@ public class GUTVisitor extends InferenceVisitor<GUTChecker, BaseAnnotatedTypeFa
      * Ignore constructor receiver annotations.
      */
     @Override
-    protected boolean checkConstructorInvocation(AnnotatedDeclaredType dt,
-                                                 AnnotatedExecutableType constructor, NewClassTree src) {
-        return true;
-    }
+    protected void checkConstructorInvocation(AnnotatedDeclaredType dt,
+                                                 AnnotatedExecutableType constructor, NewClassTree src) {}
 
     @Override
     public Void visitVariable(VariableTree node, Void p) {
@@ -358,7 +358,7 @@ public class GUTVisitor extends InferenceVisitor<GUTChecker, BaseAnnotatedTypeFa
 
     private boolean isCompatibleCastInInfer(AnnotatedTypeMirror castType, AnnotatedTypeMirror exprType, TypeCastTree node) {
         // comparablecast
-        final ConstraintManager constraintManager = InferenceMain.getInstance().getConstraintManager();
+    	final QualifierHierarchy qualHierarchy = InferenceMain.getInstance().getRealTypeFactory().getQualifierHierarchy();
         final SlotManager slotManager = InferenceMain.getInstance().getSlotManager();
         final Slot castSlot = slotManager.getVariableSlot(castType);
         final Slot exprSlot = slotManager.getVariableSlot(exprType);
@@ -369,7 +369,8 @@ public class GUTVisitor extends InferenceVisitor<GUTChecker, BaseAnnotatedTypeFa
             // Special handling for case with two ConstantSlots: even though they may not be comparable,
             // but to infer more program, let this case fall back to "anycast" silently and continue
             // inference.
-            return constraintManager.getConstraintVerifier().areComparable(castCSSlot, exprCSSlot);
+            return qualHierarchy.isSubtype(castCSSlot.getValue(), exprCSSlot.getValue())
+            		|| qualHierarchy.isSubtype(exprCSSlot.getValue(), castCSSlot.getValue());
         } else {
             // But if there is at least on VariableSlot, PICOInfer guarantees that solutions don't include
             // incomparable casts.
@@ -413,14 +414,6 @@ public class GUTVisitor extends InferenceVisitor<GUTChecker, BaseAnnotatedTypeFa
     // TODO This might not be correct for infer mode. Maybe returning as it is
     @Override
     public boolean validateType(Tree tree, AnnotatedTypeMirror type) {
-        // basic consistency checks
-        if (!AnnotatedTypes.isValidType(atypeFactory.getQualifierHierarchy(), type)) {
-            if (!infer) {
-                checker.report(
-                        Result.failure("type.invalid", type.getAnnotations(), type.toString()), tree);
-                return false;
-            }
-        }
 
         if (!typeValidator.isValid(type, tree)) {
             if (!infer) {
@@ -437,4 +430,8 @@ public class GUTVisitor extends InferenceVisitor<GUTChecker, BaseAnnotatedTypeFa
         // validity check always returns true.
         return true;
     }
+    
+    @Override
+    // GUT does not need to check extends and implements
+    protected void checkExtendsImplements(ClassTree classTree) {}
 }

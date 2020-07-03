@@ -12,15 +12,15 @@ public class ArrayWF {
     // :: error: (type.invalid.annotations.on.use)
     @Any int[] eai;
 
-    // :: error: (type.invalid)
+    // :: error: (type.invalid.conflicting.annos)
     @Peer @Rep Object[] pro;
 
-    // :: error: (type.invalid)
+    // :: error: (type.invalid.conflicting.annos)
     @Peer Object @Rep @Peer[] porp;
 
-    // :: error: (type.invalid)
+    // :: error: (type.invalid.conflicting.annos)
     @Peer Object @Rep[] @Rep @Peer[] porrp;
 
-    // :: error: (type.invalid)
+    // :: error: (type.invalid.conflicting.annos)
     @Peer Object [] [] @Rep @Peer[] poaarp;
 }

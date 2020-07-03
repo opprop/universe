@@ -38,6 +38,8 @@ public class GUTViewpointAdapter extends AbstractViewpointAdapter {
             return BOTTOM;
         } else if (AnnotationUtils.areSame(declaredAnnotation, ANY)) {
             return ANY;
+        } else if (AnnotationUtils.areSame(declaredAnnotation, SELF)) {
+        	return receiverAnnotation;
         } else if (AnnotationUtils.areSame(receiverAnnotation, BOTTOM)) {
             // If receiver is bottom, has no ownership information. Any member
             // of it from the viewpoint of self is any, except when declared

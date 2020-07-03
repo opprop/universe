@@ -15,7 +15,7 @@ public class StaticVP {
 
     // The error (uts.static.rep.forbidden) would also apply,
     // but this property is checked earlier.
-    // :: error: (type.invalid)
+    // :: error: (type.invalid.conflicting.annos)
     static @Peer @Rep Object pr;
 
     // ok

@@ -11,13 +11,13 @@ class SimpleWF {
     // OK
     @Any Object f;
 
-    // :: error: (type.invalid)
+    // :: error: (type.invalid.conflicting.annos)
     @Any @Peer Object g;
 
     // this is ensured by Java already
     // @Peer @Peer Object h;
 
-    // :: error: (type.invalid)
+    // :: error: (type.invalid.conflicting.annos)
     @Rep @Peer Object i;
 
     // :: error: (type.invalid.conflicting.annos)
@@ -25,13 +25,13 @@ class SimpleWF {
 
     void m() {
         @Peer Object o = null;
-        // :: error: (type.invalid)
+        // :: error: (type.invalid.conflicting.annos)
         if (o instanceof @Peer @Rep Object) {
             //ha!
         }
     }
 
-    // :: error: (type.invalid)
+    // :: error: (type.invalid.conflicting.annos)
     @Rep @Peer int rpi;
     // :: error: (type.invalid.annotations.on.use)
     @Peer int pi;

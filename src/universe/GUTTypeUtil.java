@@ -66,7 +66,6 @@ public class GUTTypeUtil {
         ConstantSlot constant = slotManager.createConstantSlot(am);
         if (shouldBeAppliedTo == null) {
             type.addAnnotation(slotManager.getAnnotation(constant));
-            type.addAnnotation(am);
         } else {
             constraintManager.addEqualityConstraint(shouldBeAppliedTo, constant);
         }
