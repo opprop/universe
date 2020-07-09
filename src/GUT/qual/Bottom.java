@@ -5,6 +5,7 @@ import org.checkerframework.framework.qual.ImplicitFor;
 import org.checkerframework.framework.qual.LiteralKind;
 import org.checkerframework.framework.qual.SubtypeOf;
 import org.checkerframework.framework.qual.TargetLocations;
+import org.checkerframework.framework.qual.TypeKind;
 import org.checkerframework.framework.qual.TypeUseLocation;
 
 import java.lang.annotation.Documented;
@@ -26,8 +27,13 @@ import javax.lang.model.type.TypeKind;
 @TargetLocations({TypeUseLocation.EXPLICIT_LOWER_BOUND,
         TypeUseLocation.EXPLICIT_UPPER_BOUND})
 @SubtypeOf({ Self.class, Rep.class })
-@DefaultFor({ TypeUseLocation.IMPLICIT_LOWER_BOUND })
-@ImplicitFor(literals = { LiteralKind.NULL, LiteralKind.STRING },
-        types = { TypeKind.INT, TypeKind.BYTE, TypeKind.SHORT, TypeKind.BOOLEAN,
-                TypeKind.LONG, TypeKind.CHAR, TypeKind.FLOAT, TypeKind.DOUBLE })
+@DefaultFor(value = { TypeUseLocation.LOWER_BOUND },
+        typeKinds = { TypeKind.INT, TypeKind.BYTE, TypeKind.SHORT,
+                TypeKind.BOOLEAN, TypeKind.LONG, TypeKind.CHAR, TypeKind.FLOAT,
+                TypeKind.DOUBLE },
+        types = { String.class, Double.class, Boolean.class, Byte.class,
+                Character.class, Float.class, Integer.class, Long.class,
+                Short.class }
+        )
+@QualifierForLiterals({ LiteralKind.ALL })
 public @interface Bottom {}
