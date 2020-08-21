@@ -1,4 +1,4 @@
-package GUT;
+package universe;
 
 import java.io.File;
 

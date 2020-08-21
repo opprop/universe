@@ -1,4 +1,4 @@
-package GUTI;
+package universe;
 
 import GUT.GUTTests;
 

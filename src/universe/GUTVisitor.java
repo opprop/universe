@@ -1,4 +1,4 @@
-package GUT;
+package universe;
 
 import org.checkerframework.common.basetype.BaseTypeChecker;
 import org.checkerframework.common.basetype.BaseTypeValidator;

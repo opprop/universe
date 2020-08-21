@@ -1,4 +1,4 @@
-package GUTI;
+package universe;
 
 import checkers.inference.model.Serializer;
 import constraintsolver.ConstraintSolver;

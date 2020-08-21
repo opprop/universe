@@ -1,4 +1,4 @@
-package GUTI;
+package universe;
 
 import org.checkerframework.common.basetype.BaseAnnotatedTypeFactory;
 import org.checkerframework.framework.type.AnnotatedTypeFactory;
