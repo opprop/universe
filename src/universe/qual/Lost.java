@@ -1,4 +1,4 @@
-package GUT.qual;
+package universe.qual;
 
 import org.checkerframework.framework.qual.SubtypeOf;
 import org.checkerframework.framework.qual.TargetLocations;
@@ -10,14 +10,13 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 /**
- * Ownership information is not expressible from the current viewpoint. Only
- * used internally as intermediate lost; Forbidden to be used explicitly.
+ * Ownership information is not expressible from the current viewpoint.
  *
  * @author wmdietl
  */
 @Documented
 @Retention(RetentionPolicy.RUNTIME)
 @Target({ElementType.TYPE_PARAMETER, ElementType.TYPE_USE})
+@SubtypeOf({ Any.class })
 @TargetLocations({})
-@SubtypeOf({ Lost.class })
-public @interface VPLost{}
+public @interface Lost {}

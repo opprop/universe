@@ -1,4 +1,4 @@
-package GUT.qual;
+package universe.qual;
 
 import org.checkerframework.framework.qual.DefaultFor;
 import org.checkerframework.framework.qual.ImplicitFor;
@@ -13,8 +13,8 @@ import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
-
-import javax.lang.model.type.TypeKind;
+import java.math.BigDecimal;
+import java.math.BigInteger;
 
 /**
  * The bottom of the type hierarchy is only used internally.
@@ -23,17 +23,14 @@ import javax.lang.model.type.TypeKind;
  */
 @Documented
 @Retention(RetentionPolicy.RUNTIME)
-@Target({ ElementType.TYPE_PARAMETER, ElementType.TYPE_USE })
-@TargetLocations({TypeUseLocation.EXPLICIT_LOWER_BOUND,
-        TypeUseLocation.EXPLICIT_UPPER_BOUND})
+@Target({ElementType.TYPE_PARAMETER, ElementType.TYPE_USE})
+@TargetLocations({TypeUseLocation.EXPLICIT_LOWER_BOUND})
 @SubtypeOf({ Self.class, Rep.class })
-@DefaultFor(value = { TypeUseLocation.LOWER_BOUND },
-        typeKinds = { TypeKind.INT, TypeKind.BYTE, TypeKind.SHORT,
-                TypeKind.BOOLEAN, TypeKind.LONG, TypeKind.CHAR, TypeKind.FLOAT,
-                TypeKind.DOUBLE },
-        types = { String.class, Double.class, Boolean.class, Byte.class,
-                Character.class, Float.class, Integer.class, Long.class,
-                Short.class }
+@DefaultFor({ TypeUseLocation.LOWER_BOUND })
+@ImplicitFor(literals = { LiteralKind.ALL},
+        types = { TypeKind.INT, TypeKind.BYTE, TypeKind.SHORT, TypeKind.BOOLEAN,
+                TypeKind.LONG, TypeKind.CHAR, TypeKind.FLOAT, TypeKind.DOUBLE },
+        typeNames={String.class, Double.class, Boolean.class, Byte.class,
+                Character.class, Float.class, Integer.class, Long.class, Short.class}
         )
-@QualifierForLiterals({ LiteralKind.ALL })
 public @interface Bottom {}
