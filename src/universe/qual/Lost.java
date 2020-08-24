@@ -11,12 +11,13 @@ import java.lang.annotation.Target;
 
 /**
  * Ownership information is not expressible from the current viewpoint.
+ * Can be used explicitly if allowLost is true. Otherwise forbidden.
  *
  * @author wmdietl
  */
 @Documented
 @Retention(RetentionPolicy.RUNTIME)
-@Target({ElementType.TYPE_PARAMETER, ElementType.TYPE_USE})
+@Target({ ElementType.TYPE_PARAMETER, ElementType.TYPE_USE })
 @SubtypeOf({ Any.class })
 @TargetLocations({})
 public @interface Lost {}
