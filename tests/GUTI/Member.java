@@ -1,5 +1,5 @@
-import GUT.qual.Self;
-import GUT.qual.*;
+import universe.qual.Self;
+import universe.qual.*;
 import java.util.List;
 class E {
 	// Type parameter expects @Peer + @Peer Object = @Peer Object

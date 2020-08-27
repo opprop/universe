@@ -1,8 +1,8 @@
 package GUT.topol;
 
-import GUT.qual.Any;
-import GUT.qual.Peer;
-import GUT.qual.Rep;
+import universe.qual.Any;
+import universe.qual.Peer;
+import universe.qual.Rep;
 
 public class SimpleVP {
     @Peer Object p;

@@ -52,13 +52,13 @@ import com.sun.source.tree.Tree;
 import com.sun.source.tree.TypeCastTree;
 import com.sun.source.tree.UnaryTree;
 
-import GUT.qual.Any;
-import GUT.qual.Bottom;
-import GUT.qual.Lost;
-import GUT.qual.Peer;
-import GUT.qual.Rep;
-import GUT.qual.Self;
-import GUT.qual.VPLost;
+import universe.qual.Any;
+import universe.qual.Bottom;
+import universe.qual.Lost;
+import universe.qual.Peer;
+import universe.qual.Rep;
+import universe.qual.Self;
+import universe.qual.VPLost;
 /**
  * Apply viewpoint adaptation and add implicit annotations to "this" and
  * "super".

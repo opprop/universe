@@ -1,6 +1,6 @@
 package GUT.strictpurity;
 
-import GUT.qual.Pure;
+import universe.qual.Pure;
 /**
  *
  * @author wmdietl

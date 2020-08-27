@@ -1,6 +1,6 @@
 package GUT.topol;
 
-import GUT.qual.*;
+import universe.qual.*;
 
 interface MIt<E extends @Any Object> {
     E next();

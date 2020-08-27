@@ -5,7 +5,7 @@ import javax.annotation.processing.SupportedOptions;
 import org.checkerframework.common.basetype.BaseAnnotatedTypeFactory;
 import org.checkerframework.framework.source.SupportedLintOptions;
 
-import GUT.GUTAnnotatedTypeFactory;
+import universe.GUTAnnotatedTypeFactory;
 import checkers.inference.BaseInferrableChecker;
 import checkers.inference.InferenceAnnotatedTypeFactory;
 import checkers.inference.InferenceChecker;

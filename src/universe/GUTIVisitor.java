@@ -36,8 +36,8 @@ import com.sun.source.tree.TypeCastTree;
 import com.sun.source.tree.VariableTree;
 import com.sun.source.util.TreePath;
 
-import GUT.GUTAnnotatedTypeFactory;
-import GUT.GUTChecker;
+import universe.GUTAnnotatedTypeFactory;
+import universe.GUTChecker;
 import checkers.inference.InferenceChecker;
 import checkers.inference.InferenceMain;
 import checkers.inference.InferenceValidator;

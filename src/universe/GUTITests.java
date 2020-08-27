@@ -1,6 +1,6 @@
 package universe;
 
-import GUT.GUTTests;
+import universe.GUTTests;
 
 public class GUTITests extends GUTTests {
     public static void main(String[] args) {

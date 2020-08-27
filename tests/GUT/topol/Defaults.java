@@ -1,6 +1,6 @@
 package GUT.topol;
 
-import GUT.qual.*;
+import universe.qual.*;
 
 class Defaults {
     // default for fields is peer

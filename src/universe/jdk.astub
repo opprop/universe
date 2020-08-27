@@ -1,4 +1,4 @@
-import GUT.quals.Any;
+import universe.quals.Any;
 
 package java.lang;
 

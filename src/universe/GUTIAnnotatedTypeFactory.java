@@ -6,7 +6,7 @@ import org.checkerframework.framework.type.AnnotatedTypeMirror.AnnotatedDeclared
 
 import com.sun.source.tree.Tree;
 
-import GUT.GUTAnnotatedTypeFactory;
+import universe.GUTAnnotatedTypeFactory;
 import checkers.inference.InferenceAnnotatedTypeFactory;
 import checkers.inference.InferenceChecker;
 import checkers.inference.InferenceMain;

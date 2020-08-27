@@ -1,6 +1,6 @@
 package GUT.topol;
 
-import GUT.qual.*;
+import universe.qual.*;
 
 public class Boxing {
     Integer I = 5;

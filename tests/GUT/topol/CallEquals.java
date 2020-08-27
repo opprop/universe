@@ -1,6 +1,6 @@
 package GUT.topol;
 
-import GUT.qual.*;
+import universe.qual.*;
 
 // This test only works, when we change the default annotation for
 // Object.equals to @Any.

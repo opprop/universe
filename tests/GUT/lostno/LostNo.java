@@ -1,6 +1,6 @@
 package GUT.lostno;
 
-import GUT.qual.*;
+import universe.qual.*;
 
 public class LostNo {
     //:: error: (uts.explicit.lost.forbidden)

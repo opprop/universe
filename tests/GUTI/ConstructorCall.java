@@ -1,4 +1,4 @@
-import GUT.qual.*;
+import universe.qual.*;
 
 class C {
 	public C(Object o){}

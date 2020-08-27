@@ -9,7 +9,7 @@ import org.checkerframework.javacutil.AnnotationUtils;
 import org.checkerframework.javacutil.ErrorReporter;
 import org.sat4j.core.VecInt;
 
-import GUT.GUTAnnotatedTypeFactory;
+import universe.GUTAnnotatedTypeFactory;
 import checkers.inference.InferenceMain;
 import checkers.inference.model.CombVariableSlot;
 import checkers.inference.model.CombineConstraint;
