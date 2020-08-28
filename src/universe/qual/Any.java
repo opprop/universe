@@ -1,7 +1,5 @@
 package universe.qual;
 
-import org.checkerframework.framework.qual.DefaultFor;
-import org.checkerframework.framework.qual.TypeUseLocation;
 import org.checkerframework.framework.qual.SubtypeOf;
 
 import java.lang.annotation.Documented;
@@ -20,6 +18,4 @@ import java.lang.annotation.Target;
 @Retention(RetentionPolicy.RUNTIME)
 @Target({ ElementType.TYPE_PARAMETER, ElementType.TYPE_USE })
 @SubtypeOf({})
-@DefaultFor({ TypeUseLocation.LOCAL_VARIABLE, TypeUseLocation.RESOURCE_VARIABLE,
-    TypeUseLocation.IMPLICIT_UPPER_BOUND })
 public @interface Any {}
