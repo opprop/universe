@@ -4,4 +4,4 @@
 export MYDIR=`dirname $0`
 . ./$MYDIR/setup.sh
 
-javac -processor org.checkerframework.checker.compilermsgs.CompilerMessagesChecker -Apropfiles=$MYDIR/../src/GUT/messages.properties $MYDIR/../src/GUT/*.java
+javac -processor org.checkerframework.checker.compilermsgs.CompilerMessagesChecker -Apropfiles=$MYDIR/../src/universe/messages.properties $MYDIR/../src/universe/*.java

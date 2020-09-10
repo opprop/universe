@@ -4,4 +4,4 @@
 export MYDIR=`dirname $0`
 . ./$MYDIR/setup.sh
 
-javac -processor GUT.GUTChecker $*
+javac -processor universe.UniverseChecker $*

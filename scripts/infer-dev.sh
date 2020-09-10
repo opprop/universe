@@ -8,4 +8,4 @@ export MYDIR=`dirname $0`
 distDir=$CFI/dist
 
 # Start the inference: jar files are used when making inference
-$CFI/scripts/inference-dev --checker GUTI.GUTIChecker --solver GUTI.GUTIConstraintSolver $*
+$CFI/scripts/inference-dev --checker universe.UniverseTypeInferenceChecker --solver universe.UniverseTypeInferenceConstraintSolver $*
