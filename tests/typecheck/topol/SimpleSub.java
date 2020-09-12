@@ -3,7 +3,7 @@
  * and open the template in the editor.
  */
 
-package universe.topol;
+package typecheck.topol;
 
 import universe.qual.Any;
 import universe.qual.Peer;

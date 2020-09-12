@@ -1,4 +1,4 @@
-package universe.strictpurity;
+package typecheck.strictpurity;
 
 import universe.qual.Pure;
 /**

@@ -1,4 +1,4 @@
-package universe.topol;
+package typecheck.topol;
 
 import universe.qual.*;
 import java.util.List;

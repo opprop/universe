@@ -1,3 +1,5 @@
+package typecheck.topol;
+
 import universe.qual.*;
 
 class GBounds {

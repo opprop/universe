@@ -1,4 +1,4 @@
-package universe;
+package typecheck.lostyes;
 
 import universe.qual.Lost;
 

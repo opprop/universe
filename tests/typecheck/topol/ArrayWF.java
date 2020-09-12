@@ -1,4 +1,4 @@
-package universe.topol;
+package typecheck.topol;
 
 import universe.qual.Any;
 import universe.qual.Peer;
