@@ -17,7 +17,7 @@ import java.lang.annotation.Target;
  */
 @Documented
 @Retention(RetentionPolicy.RUNTIME)
-@Target({ElementType.TYPE_PARAMETER, ElementType.TYPE_USE})
+@Target({ ElementType.TYPE_PARAMETER, ElementType.TYPE_USE })
 @TargetLocations({})
 @SubtypeOf({ Lost.class })
 public @interface VPLost{}

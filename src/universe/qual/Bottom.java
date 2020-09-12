@@ -21,7 +21,7 @@ import org.checkerframework.framework.qual.TypeUseLocation;
  */
 @Documented
 @Retention(RetentionPolicy.RUNTIME)
-@Target({ElementType.TYPE_PARAMETER, ElementType.TYPE_USE})
+@Target({ ElementType.TYPE_PARAMETER, ElementType.TYPE_USE })
 @TargetLocations({ TypeUseLocation.EXPLICIT_LOWER_BOUND,
         TypeUseLocation.EXPLICIT_UPPER_BOUND })
 @SubtypeOf({ Self.class, Rep.class })
