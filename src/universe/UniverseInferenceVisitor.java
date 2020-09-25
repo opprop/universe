@@ -51,7 +51,7 @@ import checkers.inference.model.VariableSlot;
  *
  * @author wmdietl
  */
-public class UniverseTypeInferenceVisitor extends InferenceVisitor<UniverseTypeInferenceChecker, BaseAnnotatedTypeFactory> {
+public class UniverseInferenceVisitor extends InferenceVisitor<UniverseInferenceChecker, BaseAnnotatedTypeFactory> {
 
     private final boolean checkOaM;
     private final boolean checkStrictPurity;
@@ -62,9 +62,9 @@ public class UniverseTypeInferenceVisitor extends InferenceVisitor<UniverseTypeI
 
     /*
      * We continue to use BaseTypeChecker as first parameter type, because this
-     * class is instantiated by both the UniverseTypeInferenceChecker and the InferenceChecker.
+     * class is instantiated by both the UniverseInferenceChecker and the InferenceChecker.
      */
-    public UniverseTypeInferenceVisitor(UniverseTypeInferenceChecker checker, InferenceChecker ichecker, BaseAnnotatedTypeFactory factory, boolean infer) {
+    public UniverseInferenceVisitor(UniverseInferenceChecker checker, InferenceChecker ichecker, BaseAnnotatedTypeFactory factory, boolean infer) {
         super(checker, ichecker, factory, infer);
 
         this.allowLost = checker.getLintOption("allowLost", false);
@@ -83,11 +83,11 @@ public class UniverseTypeInferenceVisitor extends InferenceVisitor<UniverseTypeI
      * The type validator to ensure correct usage of ownership modifiers.
      */
     @Override
-    protected UniverseTypeInferenceValidator createTypeValidator() {
-        // System.out.println("UniverseTypeInferenceValidator constructor is called!");
+    protected UniverseInferenceValidator createTypeValidator() {
+        // System.out.println("UniverseInferenceValidator constructor is called!");
         //System.out.println("univATF is: " + this.univATF);
         // Overriding version of createTypeValidator() needs a parameter which is provided after the call to this method according to super constructor.
-        // But univATF is not set, so UniverseTypeInferenceValidator's atypeFactory field is null, and causes nullpointer exception.
+        // But univATF is not set, so UniverseInferenceValidator's atypeFactory field is null, and causes nullpointer exception.
         // Fix is: get realtypefactory as soon as possible, and don't wait till univATF is provided.
 
         // I think the following line is incorrect. We need
@@ -95,8 +95,8 @@ public class UniverseTypeInferenceVisitor extends InferenceVisitor<UniverseTypeI
         // rather than UniverseAnnotatedTypeFactory.
         /*
         UniverseAnnotatedTypeFactory univATFParameter = (UniverseAnnotatedTypeFactory) InferenceMain.getInstance().getRealTypeFactory();
-        return new UniverseTypeInferenceValidator(checker, this, univATFParameter);*/
-        return new UniverseTypeInferenceValidator(checker, this, this.atypeFactory);
+        return new UniverseInferenceValidator(checker, this, univATFParameter);*/
+        return new UniverseInferenceValidator(checker, this, this.atypeFactory);
     }
 
     // TODO: find a nicer way to set preferences
@@ -161,7 +161,7 @@ public class UniverseTypeInferenceVisitor extends InferenceVisitor<UniverseTypeI
      */
     @Override
     public Void visitNewClass(NewClassTree node, Void p) {
-        // System.out.println("UniverseTypeInferenceVisitor: visitNewClass is called!");
+        // System.out.println("UniverseInferenceVisitor: visitNewClass is called!");
         assert node != null;
         //Using UniverseAnnotatedTypeFactory is OK! It can still get the VarAnnotations, and add
         //constraints on them
@@ -205,7 +205,7 @@ public class UniverseTypeInferenceVisitor extends InferenceVisitor<UniverseTypeI
                     return encb.isStatic();
                 } else {
                     // We are somewhere in a class declaration already, e.g. the extends clause
-                    // System.out.println("UniverseTypeInferenceVisitor::isContextStatic: lost in the tree, help! Path leaf: " + path.getLeaf());
+                    // System.out.println("UniverseInferenceVisitor::isContextStatic: lost in the tree, help! Path leaf: " + path.getLeaf());
                     return false;
                 }
             }
@@ -382,8 +382,8 @@ public class UniverseTypeInferenceVisitor extends InferenceVisitor<UniverseTypeI
     /**
      * This type validator ensures correct usage of ownership modifiers.
      */
-    private final class UniverseTypeInferenceValidator extends InferenceValidator {
-        public UniverseTypeInferenceValidator(BaseTypeChecker checker,
+    private final class UniverseInferenceValidator extends InferenceValidator {
+        public UniverseInferenceValidator(BaseTypeChecker checker,
                 InferenceVisitor<?, ?> visitor,
                 // UniverseAnnotatedTypeFactory atypeFactory) {
                 // Is it correct? Only debugging.
@@ -401,9 +401,9 @@ public class UniverseTypeInferenceVisitor extends InferenceVisitor<UniverseTypeI
          */
         @Override
         public Void visitDeclared(AnnotatedDeclaredType type, Tree p) {
-            // System.out.println("==========visitDeclared in UniverseTypeInferenceValidator is called!");
+            // System.out.println("==========visitDeclared in UniverseInferenceValidator is called!");
             // System.out.println(
-            // "UniverseTypeInferenceValidator: visitDeclared is called!");
+            // "UniverseInferenceValidator: visitDeclared is called!");
             // ModifiersTree mt = ((VariableTree) p).getModifiers();
             // if (mt.getFlags().contains(Modifier.STATIC)) {
             // System.out.println("\n========p is: " + p);
@@ -412,7 +412,7 @@ public class UniverseTypeInferenceVisitor extends InferenceVisitor<UniverseTypeI
             // System.out.println(atypeFactory == null);
             // System.out.println("----------------atypeFactory.getPath(p) is: "
             // + atypeFactory.getPath(p));
-            if (UniverseTypeInferenceVisitor.isContextStatic(atypeFactory.getPath(p))) {
+            if (UniverseInferenceVisitor.isContextStatic(atypeFactory.getPath(p))) {
                 doesNotContain(type, univATF.REP, "uts.static.rep.forbidden", p);
 
                 if (warn_staticpeer) {
@@ -431,7 +431,7 @@ public class UniverseTypeInferenceVisitor extends InferenceVisitor<UniverseTypeI
             // it mean?
             if (type.getAnnotations().size() > 2) {
                 System.out.println(
-                        "UniverseVisitor$UniverseTypeInferenceValidator: Don't know if it's correct: type is: "
+                        "UniverseVisitor$UniverseInferenceValidator: Don't know if it's correct: type is: "
                                 + type);
                 reportError(type, p);
             }
@@ -445,7 +445,7 @@ public class UniverseTypeInferenceVisitor extends InferenceVisitor<UniverseTypeI
             // For debuggin purpose, move the last line to here
             // return super.visitParameterizedType(type, tree);
             // System.out.println(
-            // "UniverseTypeInferenceVaildator: visitParameterizedType is called!");
+            // "UniverseInferenceVaildator: visitParameterizedType is called!");
 
             final TypeElement element = (TypeElement) type.getUnderlyingType().asElement();
             List<AnnotatedTypeParameterBounds> typeParamBounds = atypeFactory.typeVariablesFromUse(type, element);

@@ -15,9 +15,9 @@ import checkers.inference.VariableAnnotator;
 import checkers.inference.model.ConstraintManager;
 import checkers.inference.model.VariableSlot;
 
-public class UniverseTypeInferenceAnnotatedTypeFactory extends InferenceAnnotatedTypeFactory {
+public class UniverseInferenceAnnotatedTypeFactory extends InferenceAnnotatedTypeFactory {
 
-    public UniverseTypeInferenceAnnotatedTypeFactory(InferenceChecker inferenceChecker,
+    public UniverseInferenceAnnotatedTypeFactory(InferenceChecker inferenceChecker,
             boolean withCombineConstraints,
             BaseAnnotatedTypeFactory realTypeFactory,
             InferrableChecker realChecker, SlotManager slotManager,
@@ -46,13 +46,13 @@ public class UniverseTypeInferenceAnnotatedTypeFactory extends InferenceAnnotate
             BaseAnnotatedTypeFactory realTypeFactory,
             InferrableChecker realChecker, SlotManager slotManager,
             ConstraintManager constraintManager) {
-        return new UniverseTypeInferenceVariableAnnotator(inferenceTypeFactory, realTypeFactory,
+        return new UniverseInferenceVariableAnnotator(inferenceTypeFactory, realTypeFactory,
                 realChecker, slotManager, constraintManager);
     }*/
 
-    static class UniverseTypeInferenceVariableAnnotator extends VariableAnnotator {
+    static class UniverseInferenceVariableAnnotator extends VariableAnnotator {
 
-        public UniverseTypeInferenceVariableAnnotator(
+        public UniverseInferenceVariableAnnotator(
                 InferenceAnnotatedTypeFactory inferenceTypeFactory,
                 AnnotatedTypeFactory realTypeFactory,
                 InferrableChecker realChecker, SlotManager slotManager,

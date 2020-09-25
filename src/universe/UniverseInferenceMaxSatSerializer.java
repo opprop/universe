@@ -21,12 +21,12 @@ import maxsatbackend.MaxSatSerializer;
 import util.MathUtils;
 import util.VectorUtils;
 
-public class UniverseTypeInferenceMaxSatSerializer extends MaxSatSerializer {
+public class UniverseInferenceMaxSatSerializer extends MaxSatSerializer {
 
     private AnnotationMirror ANY, PEER, REP, LOST, VPLOST, BOTTOM, SELF;
     private boolean allowLost;
 
-    public UniverseTypeInferenceMaxSatSerializer(Lattice lattice) {
+    public UniverseInferenceMaxSatSerializer(Lattice lattice) {
         super(lattice);
         UniverseAnnotatedTypeFactory univATF = (UniverseAnnotatedTypeFactory) InferenceMain
                 .getInstance().getRealTypeFactory();

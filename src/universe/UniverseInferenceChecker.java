@@ -21,19 +21,19 @@ import checkers.inference.model.ConstraintManager;
 // Keep these synchronized with the superclass.
 @SupportedOptions( { "warn" } )
 @SupportedLintOptions({"allowLost", "checkOaM", "checkStrictPurity"})
-public class UniverseTypeInferenceChecker extends BaseInferrableChecker {
+public class UniverseInferenceChecker extends BaseInferrableChecker {
 
     @Override
     public BaseAnnotatedTypeFactory createRealTypeFactory() {
-        // Return the UniverseTypeInferenceAnnotatedTypeFactory so that it can carry
-        // UniverseTypeInferenceVariableAnnotator
-        return new UniverseTypeInferenceAnnotatedTypeFactory(this);
+        // Return the UniverseInferenceAnnotatedTypeFactory so that it can carry
+        // UniverseInferenceVariableAnnotator
+        return new UniverseInferenceAnnotatedTypeFactory(this);
     }
 
     @Override
     public InferenceVisitor<?, ?> createVisitor(InferenceChecker checker,
             BaseAnnotatedTypeFactory factory, boolean infer) {
-        return new UniverseTypeInferenceVisitor(this, checker, factory, infer);
+        return new UniverseInferenceVisitor(this, checker, factory, infer);
     }
 
     @Override
@@ -51,7 +51,7 @@ public class UniverseTypeInferenceChecker extends BaseInferrableChecker {
             InferenceChecker inferenceChecker, InferrableChecker realChecker,
             BaseAnnotatedTypeFactory realTypeFactory, SlotManager slotManager,
             ConstraintManager constraintManager) {
-        return new UniverseTypeInferenceAnnotatedTypeFactory(inferenceChecker,
+        return new UniverseInferenceAnnotatedTypeFactory(inferenceChecker,
         	withCombineConstraints(), realTypeFactory, realChecker,
                 slotManager, constraintManager);
     }
