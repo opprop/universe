@@ -36,7 +36,7 @@ dependencies {
     implementation fileTree(dir: "${cfPath}/checker/dist", include: "checker.jar")
     implementation fileTree(dir: "${cfiPath}/dist", include: "checker-framework-inference.jar")
     implementation fileTree(dir: "${cfiPath}/dist", include: "inference-framework-test-lib.jar")
-    implementation group: 'log4j', name: 'log4j', version: '1.2.16'
+    implementation group: 'log4j', name: 'log4j', version: '1.2.17'
     implementation 'commons-logging:commons-logging:1.2'
     testImplementation framework_test_jar
     testImplementation 'junit:junit:4.13'
