@@ -19,7 +19,7 @@ else
 fi
 
 
-export CFI="${CFI:-$(pwd -P)/../checker-framework}"
+export CFI="${CFI:-$(pwd -P)/../checker-framework-inference}"
 
 ## Build Checker Framework Inference (which also clones & builds dependencies)
 /tmp/plume-scripts/git-clone-related opprop checker-framework-inference ${CFI}
