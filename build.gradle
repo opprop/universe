@@ -59,6 +59,7 @@ sourceSets {
     }
 }
 
+// TODO: This doesn't work when nothing was built before
 task cloneAndBuildDependencies(type: Exec) {
     description 'Clones (or updates) and builds all dependencies'
     executable './scripts/setup-deps.sh'
