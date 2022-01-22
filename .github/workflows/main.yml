@@ -29,9 +29,5 @@ jobs:
       with:
         java-version: ${{matrix.jdk}}
         distribution: 'temurin'
-    - name: Clone and build dependencies
-      run: ./scripts/setup-deps.sh
-    - name: Build with Gradle
-      uses: gradle/gradle-build-action@4137be6a8bf7d7133955359dbd952c0ca73b1021
-      with:
-        arguments: test
+    - name: Build and test
+      run: ./.ci-build.sh
