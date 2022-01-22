@@ -23,7 +23,7 @@ export CFI="${CFI:-$(pwd -P)/../checker-framework-inference}"
 
 ## Build Checker Framework Inference (which also clones & builds dependencies)
 /tmp/plume-scripts/git-clone-related opprop checker-framework-inference ${CFI}
-(cd $CFI && ./gradlew cloneAndBuildDependencies && ./gradlew dist && ./gradlew testLibJar)
+(cd $CFI && ./.ci-build-without-test.sh)
 
 ./gradlew assemble
 
