@@ -1,4 +1,6 @@
-apply plugin: 'java'
+plugins {
+    id 'java'
+}
 
 ext {
     jsr308 = System.getenv('JSR308') ?: file(new File("..")).absolutePath
@@ -34,27 +36,27 @@ dependencies {
     implementation fileTree(dir: "${cfPath}/checker/dist", include: "checker.jar")
     implementation fileTree(dir: "${cfiPath}/dist", include: "checker-framework-inference.jar")
     implementation fileTree(dir: "${cfiPath}/dist", include: "inference-framework-test-lib.jar")
-    implementation group: 'log4j', name: 'log4j', version: '1.2.16'
+    implementation group: 'log4j', name: 'log4j', version: '1.2.17'
     implementation 'commons-logging:commons-logging:1.2'
     testImplementation framework_test_jar
-    testImplementation 'junit:junit:4.13'
+    testImplementation 'junit:junit:4.13.2'
 }
 
 sourceSets {
     main {
         java {
-            srcDir "src"
+            srcDir "src/main/java"
         }
 
         resources {
-            srcDir "src"
+            srcDir "src/main/java"
             exclude "**/*.java"
         }
     }
 
     test {
         java {
-            srcDirs = ["test"]
+            srcDirs = ["src/test/java"]
         }
     }
 }
@@ -75,7 +77,7 @@ compileJava {
 
 afterEvaluate {
     // Create a task for each JUnit test class whose name is the same as the JUnit class name.
-    sourceSets.test.allJava.filter { it.path.contains("${universePath}/test") }.forEach { file ->
+    sourceSets.test.allJava.filter { it.path.contains("${universePath}/src/test/java") }.forEach { file ->
         String junitClassName = file.name.replaceAll(".java", "")
         String testName = junitClassName.replaceAll("Test", "")
         tasks.create(name: "${junitClassName}", type: Test) {
