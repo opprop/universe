@@ -1,7 +1,6 @@
 package universe;
 
 import static universe.UniverseAnnotationMirrorHolder.ANY;
-import static universe.UniverseAnnotationMirrorHolder.BOTTOM;
 import static universe.UniverseAnnotationMirrorHolder.PEER;
 import static universe.UniverseAnnotationMirrorHolder.REP;
 import static universe.UniverseAnnotationMirrorHolder.SELF;
@@ -18,7 +17,6 @@ import checkers.inference.util.InferenceViewpointAdapter;
 
 import com.sun.source.tree.BinaryTree;
 import com.sun.source.tree.Tree;
-import com.sun.source.tree.TypeCastTree;
 
 import org.checkerframework.common.basetype.BaseAnnotatedTypeFactory;
 import org.checkerframework.framework.type.AnnotatedTypeFactory;
@@ -58,7 +56,7 @@ public class UniverseInferenceAnnotatedTypeFactory extends InferenceAnnotatedTyp
     public TreeAnnotator createTreeAnnotator() {
         return new ListTreeAnnotator(
                 new LiteralTreeAnnotator(this),
-                new UniverseInferencePropagationTreeAnnotater(this),
+                new PropagationTreeAnnotator(this),
                 new InferenceTreeAnnotator(
                         this, realChecker, realTypeFactory, variableAnnotator, slotManager));
     }
@@ -114,45 +112,6 @@ public class UniverseInferenceAnnotatedTypeFactory extends InferenceAnnotatedTyp
                 return;
             }
             super.handleBinaryTree(atm, binaryTree);
-        }
-    }
-
-    private static class UniverseInferencePropagationTreeAnnotater
-            extends PropagationTreeAnnotator {
-        public UniverseInferencePropagationTreeAnnotater(AnnotatedTypeFactory atypeFactory) {
-            super(atypeFactory);
-        }
-
-        @Override
-        public Void visitBinary(BinaryTree node, AnnotatedTypeMirror type) {
-            applyBottomIfImplicitlyBottom(
-                    type); // Usually there isn't existing annotation on binary trees, but to be
-            // safe, run it first
-            return super.visitBinary(node, type);
-        }
-
-        @Override
-        public Void visitTypeCast(TypeCastTree node, AnnotatedTypeMirror type) {
-            applyBottomIfImplicitlyBottom(
-                    type); // Must run before calling super method to respect existing annotation
-            if (type.isAnnotatedInHierarchy(ANY)) {
-                // VarAnnot is guarenteed to not exist on type, because PropagationTreeAnnotator has
-                // the highest previledge
-                // So VarAnnot hasn't been inserted to cast type yet.
-                UniverseTypeUtil.applyConstant(type, type.getAnnotationInHierarchy(ANY));
-            }
-            return super.visitTypeCast(node, type);
-        }
-
-        /**
-         * Because TreeAnnotator runs before ImplicitsTypeAnnotator, implicitly immutable types are
-         * not guaranteed to always have immutable annotation. If this happens, we manually add
-         * immutable to type.
-         */
-        private void applyBottomIfImplicitlyBottom(AnnotatedTypeMirror type) {
-            if (UniverseTypeUtil.isImplicitlyBottomType(type)) {
-                UniverseTypeUtil.applyConstant(type, BOTTOM);
-            }
         }
     }
 
