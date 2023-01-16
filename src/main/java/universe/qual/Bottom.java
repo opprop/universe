@@ -22,7 +22,6 @@ import java.lang.annotation.Target;
 @Documented
 @Retention(RetentionPolicy.RUNTIME)
 @Target({ElementType.TYPE_PARAMETER, ElementType.TYPE_USE})
-@TargetLocations({TypeUseLocation.EXPLICIT_LOWER_BOUND})
 @SubtypeOf({Self.class, Rep.class})
 @QualifierForLiterals({LiteralKind.ALL})
 @DefaultFor(
