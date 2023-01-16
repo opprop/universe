@@ -1,7 +1,6 @@
 package universe.qual;
 
 import org.checkerframework.framework.qual.SubtypeOf;
-import org.checkerframework.framework.qual.TargetLocations;
 
 import java.lang.annotation.Documented;
 import java.lang.annotation.ElementType;
