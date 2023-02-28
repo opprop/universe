@@ -1,10 +1,10 @@
 package typecheck.topol;
 
+import java.util.List;
+
 import universe.qual.Any;
 import universe.qual.Peer;
 import universe.qual.Rep;
-
-import java.util.List;
 
 // check that duplicate modifiers are handled correctly
 class SimpleWF {

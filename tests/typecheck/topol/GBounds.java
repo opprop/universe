@@ -11,8 +11,7 @@ class GBounds {
     class C1<X extends @Peer Object> {
         X f;
 
-        @Peer
-        Object m() {
+        @Peer Object m() {
             return f;
         }
     }

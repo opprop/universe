@@ -6,16 +6,6 @@ import static universe.UniverseAnnotationMirrorHolder.PEER;
 import static universe.UniverseAnnotationMirrorHolder.REP;
 import static universe.UniverseAnnotationMirrorHolder.SELF;
 
-import checkers.inference.InferenceAnnotatedTypeFactory;
-import checkers.inference.InferenceChecker;
-import checkers.inference.InferenceTreeAnnotator;
-import checkers.inference.InferrableChecker;
-import checkers.inference.SlotManager;
-import checkers.inference.VariableAnnotator;
-import checkers.inference.model.ConstraintManager;
-import checkers.inference.model.Slot;
-import checkers.inference.util.InferenceViewpointAdapter;
-
 import com.sun.source.tree.BinaryTree;
 import com.sun.source.tree.Tree;
 import com.sun.source.tree.TypeCastTree;
@@ -30,6 +20,16 @@ import org.checkerframework.framework.type.treeannotator.PropagationTreeAnnotato
 import org.checkerframework.framework.type.treeannotator.TreeAnnotator;
 
 import javax.lang.model.element.AnnotationMirror;
+
+import checkers.inference.InferenceAnnotatedTypeFactory;
+import checkers.inference.InferenceChecker;
+import checkers.inference.InferenceTreeAnnotator;
+import checkers.inference.InferrableChecker;
+import checkers.inference.SlotManager;
+import checkers.inference.VariableAnnotator;
+import checkers.inference.model.ConstraintManager;
+import checkers.inference.model.Slot;
+import checkers.inference.util.InferenceViewpointAdapter;
 
 public class UniverseInferenceAnnotatedTypeFactory extends InferenceAnnotatedTypeFactory {
 

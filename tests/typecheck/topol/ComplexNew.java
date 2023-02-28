@@ -4,7 +4,9 @@ import universe.qual.Any;
 import universe.qual.Peer;
 import universe.qual.Rep;
 
-/** @author wmdietl */
+/**
+ * @author wmdietl
+ */
 public class ComplexNew {
 
     ComplexNew(@Peer Object p) {}

@@ -4,7 +4,7 @@ public class MethodInvocation {
 
     class B {
         @Rep Object foo(Object o) {
-	    // :: fixable-error: (return.type.incompatible)
+            // :: fixable-error: (return.type.incompatible)
             return new Object();
         }
 

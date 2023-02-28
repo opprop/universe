@@ -1,3 +1,17 @@
+buildscript {
+    repositories {
+        mavenCentral()
+    }
+    dependencies {
+        if (JavaVersion.current() >= JavaVersion.VERSION_11) {
+            // Code formatting; defines targets "spotlessApply" and "spotlessCheck".
+            // https://github.com/diffplug/spotless/tags ; see tags starting "gradle/"
+            // Only works on JDK 11+.
+            classpath 'com.diffplug.spotless:spotless-plugin-gradle:6.14.0'
+        }
+    }
+}
+
 plugins {
     id 'java'
     id 'net.ltgt.errorprone' version '3.0.1'
@@ -12,19 +26,29 @@ ext {
     formatScripts = "${universePath}/scripts/.run-google-java-format"
 
     isJava8 = JavaVersion.current() == JavaVersion.VERSION_1_8
+    isJava11plus = JavaVersion.current() >= JavaVersion.VERSION_11
 
     // Keep in sync with checker-framework/build.gradle.
     // TODO: find a way to directly use that variable.
     compilerArgsForRunningCF = [
-            "--add-exports", "jdk.compiler/com.sun.tools.javac.api=ALL-UNNAMED",
-            "--add-exports", "jdk.compiler/com.sun.tools.javac.code=ALL-UNNAMED",
-            "--add-exports", "jdk.compiler/com.sun.tools.javac.file=ALL-UNNAMED",
-            "--add-exports", "jdk.compiler/com.sun.tools.javac.main=ALL-UNNAMED",
-            "--add-exports", "jdk.compiler/com.sun.tools.javac.model=ALL-UNNAMED",
-            "--add-exports", "jdk.compiler/com.sun.tools.javac.processing=ALL-UNNAMED",
-            "--add-exports", "jdk.compiler/com.sun.tools.javac.tree=ALL-UNNAMED",
-            "--add-exports", "jdk.compiler/com.sun.tools.javac.util=ALL-UNNAMED",
-            "--add-opens", "jdk.compiler/com.sun.tools.javac.comp=ALL-UNNAMED",
+        "--add-exports",
+        "jdk.compiler/com.sun.tools.javac.api=ALL-UNNAMED",
+        "--add-exports",
+        "jdk.compiler/com.sun.tools.javac.code=ALL-UNNAMED",
+        "--add-exports",
+        "jdk.compiler/com.sun.tools.javac.file=ALL-UNNAMED",
+        "--add-exports",
+        "jdk.compiler/com.sun.tools.javac.main=ALL-UNNAMED",
+        "--add-exports",
+        "jdk.compiler/com.sun.tools.javac.model=ALL-UNNAMED",
+        "--add-exports",
+        "jdk.compiler/com.sun.tools.javac.processing=ALL-UNNAMED",
+        "--add-exports",
+        "jdk.compiler/com.sun.tools.javac.tree=ALL-UNNAMED",
+        "--add-exports",
+        "jdk.compiler/com.sun.tools.javac.util=ALL-UNNAMED",
+        "--add-opens",
+        "jdk.compiler/com.sun.tools.javac.comp=ALL-UNNAMED",
     ]
 }
 
@@ -90,9 +114,10 @@ task cloneAndBuildDependencies(type: Exec) {
 
 tasks.withType(JavaCompile) { compilationTask ->
     options.compilerArgs = [
-            '-implicit:class',
-            '-Awarns',
-            '-Xmaxwarns', '10000',
+        '-implicit:class',
+        '-Awarns',
+        '-Xmaxwarns',
+        '10000',
     ]
 
     // Error Prone must be available in the annotation processor path
@@ -118,8 +143,8 @@ afterEvaluate {
         group 'Verification'
 
         systemProperties = [
-                'path.afu.scripts' : "${afu}/scripts",
-                'path.inference.script': "${cfiPath}/scripts/inference"
+            'path.afu.scripts' : "${afu}/scripts",
+            'path.inference.script': "${cfiPath}/scripts/inference"
         ]
 
         environment "external_checker_classpath", "${universePath}/build/classes/java/main:${universePath}/build/libs/universe.jar"
@@ -167,82 +192,32 @@ tasks.clean {
             fileTree('tests') { include '**/*.class' }
 }
 
+if (isJava11plus) {
+    apply plugin: 'com.diffplug.spotless'
 
-task getCodeFormatScripts() {
-    description 'Obtain or update the run-google-java-format scripts'
-    if (file(formatScripts).exists()) {
-        exec {
-            workingDir formatScripts
-            executable 'git'
-            args = ['pull', '-q']
-            ignoreExitValue = true
+    spotless {
+        // If you add any formatters to this block that require dependencies here, then you must also
+        // add them to spotlessPredeclare block.
+        format 'misc', {
+            // define the files to apply `misc` to
+            target '*.md', '.gitignore'
+            // define the steps to apply to those files
+            trimTrailingWhitespace()
+            indentWithSpaces(2)
+            endWithNewline()
         }
-    } else {
-        exec {
-            workingDir "${formatScripts}/../"
-            executable 'git'
-            args = ['clone', '-q', '--depth', '1', 'https://github.com/eisop-plume-lib/run-google-java-format.git', '.run-google-java-format']
+        java {
+            target '**/*.java'
+            googleJavaFormat().aosp()
+            importOrder('com', 'jdk', 'lib', 'lombok', 'org', 'java', 'javax')
+            formatAnnotations().addTypeAnnotation("Any").addTypeAnnotation("Bottom").addTypeAnnotation("Lost").addTypeAnnotation("Peer").addTypeAnnotation("Rep").addTypeAnnotation("Self")
         }
-    }
-}
-
-task pythonIsInstalled(type: Exec) {
-    description "Check that the python3 executable is installed."
-    executable = "python3"
-    args "--version"
-}
-
-/**
- * Returns a list of all the Java files that should be formatted for the given project.
- *
- * @return a list of all Java files that should be formatted for projectName
- */
-List<String> getJavaFilesToFormat() {
-    List<File> javaFiles = new ArrayList<>();
-    sourceSets.forEach { set ->
-        javaFiles.addAll(set.allSource.files)
-    }
-    List<String> args = new ArrayList<>();
-    for (File f : javaFiles) {
-        if (f.name.endsWith('java')) {
-            args += f.absolutePath
-        }
-    }
-    return args
-}
-
-task checkFormat(type: Exec, dependsOn: [getCodeFormatScripts, pythonIsInstalled], group: 'Format') {
-    description 'Check whether the source code is properly formatted'
-    executable 'python3'
-    doFirst {
-        if (isJava8) {
-            println 'The checkFormat task cannot be run on Java 8.  Please use Java 11+.'
-            return
-        }
-        args += "${formatScripts}/check-google-java-format.py"
-        args += "--aosp" // 4 space indentation
-        args += getJavaFilesToFormat()
-    }
-    ignoreExitValue = true
-    doLast {
-        if (!executionResult.isPresent() || executionResult.get().exitValue != 0) {
-            throw new RuntimeException('Found improper formatting, try running:  ./gradlew reformat"')
+        groovyGradle {
+            target '**/*.gradle'
+            greclipse()  // which formatter Spotless should use to format .gradle files.
+            indentWithSpaces(4)
+            trimTrailingWhitespace()
+            // endWithNewline() // Don't want to end empty files with a newline
         }
     }
 }
-
-task reformat(type: Exec, dependsOn: [getCodeFormatScripts, pythonIsInstalled], group: 'Format') {
-    description 'Format the Java source code'
-    executable 'python3'
-    doFirst {
-        if (isJava8) {
-            println 'The reformat task cannot be run on Java 8.  Please use Java 11+.'
-            return
-        }
-        args += "${formatScripts}/run-google-java-format.py"
-        args += "--aosp" // 4 space indentation
-        args += getJavaFilesToFormat()
-    }
-}
-
-tasks.test.dependsOn 'checkFormat'

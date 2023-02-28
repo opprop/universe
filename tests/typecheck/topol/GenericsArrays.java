@@ -1,8 +1,8 @@
 package typecheck.topol;
 
-import universe.qual.*;
-
 import java.util.List;
+
+import universe.qual.*;
 
 // Use of EventList reveals a different problem, add a testcase!
 // import ca.odell.glazedlists.EventList;
