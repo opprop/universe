@@ -83,7 +83,7 @@ dependencies {
     testImplementation framework_test_jar
     testImplementation 'junit:junit:4.13.2'
 
-    errorprone 'com.google.errorprone:error_prone_core:2.18.0'
+    errorprone 'com.google.errorprone:error_prone_core:2.19.1'
     errorproneJavac 'com.google.errorprone:javac:9+181-r4173-1'
 }
 
