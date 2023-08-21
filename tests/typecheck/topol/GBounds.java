@@ -43,6 +43,7 @@ class GBounds {
     class C5<Y extends @Rep Object> {}
 
     class C6 extends C5<@Rep Data> {}
+
     // :: error: (type.argument.type.incompatible)
     class C7 extends C5<@Peer Data> {}
 }
