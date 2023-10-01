@@ -1,7 +1,5 @@
 package universe;
 
-import checkers.inference.BaseInferenceRealTypeFactory;
-
 import com.sun.source.tree.BinaryTree;
 import com.sun.source.tree.IdentifierTree;
 import com.sun.source.tree.MethodTree;
@@ -20,13 +18,6 @@ import org.checkerframework.framework.type.treeannotator.TreeAnnotator;
 import org.checkerframework.framework.type.typeannotator.DefaultForTypeAnnotator;
 import org.checkerframework.javacutil.TreeUtils;
 
-import universe.qual.Any;
-import universe.qual.Bottom;
-import universe.qual.Lost;
-import universe.qual.Peer;
-import universe.qual.Rep;
-import universe.qual.Self;
-
 import java.lang.annotation.Annotation;
 import java.util.Arrays;
 import java.util.Collections;
@@ -35,6 +26,14 @@ import java.util.Set;
 
 import javax.lang.model.element.Element;
 import javax.lang.model.element.ExecutableElement;
+
+import checkers.inference.BaseInferenceRealTypeFactory;
+import universe.qual.Any;
+import universe.qual.Bottom;
+import universe.qual.Lost;
+import universe.qual.Peer;
+import universe.qual.Rep;
+import universe.qual.Self;
 
 /**
  * Apply viewpoint adaptation and add implicit annotations to "this" and "super".

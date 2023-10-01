@@ -27,6 +27,7 @@ public class StaticVP {
         // :: error: (uts.static.rep.forbidden)
         or = new @Rep Object();
     }
+
     // :: error: (uts.static.rep.forbidden)
     static @Any Object ao = new @Rep Object();
 

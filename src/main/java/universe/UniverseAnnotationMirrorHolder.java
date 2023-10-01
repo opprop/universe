@@ -4,15 +4,15 @@ import org.checkerframework.dataflow.qual.Pure;
 import org.checkerframework.framework.source.SourceChecker;
 import org.checkerframework.javacutil.AnnotationBuilder;
 
+import javax.lang.model.element.AnnotationMirror;
+import javax.lang.model.util.Elements;
+
 import universe.qual.Any;
 import universe.qual.Bottom;
 import universe.qual.Lost;
 import universe.qual.Peer;
 import universe.qual.Rep;
 import universe.qual.Self;
-
-import javax.lang.model.element.AnnotationMirror;
-import javax.lang.model.util.Elements;
 
 /** Class that declares the AnnotationMirrors used by typecheck and inference */
 public class UniverseAnnotationMirrorHolder {

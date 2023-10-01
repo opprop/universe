@@ -1,17 +1,16 @@
 package universe;
 
-import checkers.inference.test.CFInferenceTest;
-
 import org.checkerframework.framework.test.TestUtilities;
 import org.checkerframework.javacutil.Pair;
 import org.junit.runners.Parameterized.Parameters;
-
-import universe.solver.UniverseSolverEngine;
 
 import java.io.File;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+
+import checkers.inference.test.CFInferenceTest;
+import universe.solver.UniverseSolverEngine;
 
 public class UniverseInferenceTest extends CFInferenceTest {
 

@@ -6,15 +6,6 @@ import static universe.UniverseAnnotationMirrorHolder.LOST;
 import static universe.UniverseAnnotationMirrorHolder.REP;
 import static universe.UniverseAnnotationMirrorHolder.SELF;
 
-import checkers.inference.InferenceChecker;
-import checkers.inference.InferenceMain;
-import checkers.inference.InferenceVisitor;
-import checkers.inference.SlotManager;
-import checkers.inference.model.ConstantSlot;
-import checkers.inference.model.ConstraintManager;
-import checkers.inference.model.Slot;
-import checkers.inference.model.VariableSlot;
-
 import com.sun.source.tree.AssignmentTree;
 import com.sun.source.tree.ClassTree;
 import com.sun.source.tree.ExpressionTree;
@@ -37,6 +28,15 @@ import org.checkerframework.javacutil.TreeUtils;
 import javax.lang.model.element.AnnotationMirror;
 import javax.lang.model.element.ExecutableElement;
 import javax.lang.model.type.TypeKind;
+
+import checkers.inference.InferenceChecker;
+import checkers.inference.InferenceMain;
+import checkers.inference.InferenceVisitor;
+import checkers.inference.SlotManager;
+import checkers.inference.model.ConstantSlot;
+import checkers.inference.model.ConstraintManager;
+import checkers.inference.model.Slot;
+import checkers.inference.model.VariableSlot;
 
 /**
  * Type visitor to either enforce or infer the universe type rules.

@@ -7,15 +7,6 @@ import static universe.UniverseAnnotationMirrorHolder.PEER;
 import static universe.UniverseAnnotationMirrorHolder.REP;
 import static universe.UniverseAnnotationMirrorHolder.SELF;
 
-import checkers.inference.model.CombVariableSlot;
-import checkers.inference.model.ConstantSlot;
-import checkers.inference.model.VariableSlot;
-import checkers.inference.solver.backend.encoder.combine.CombineConstraintEncoder;
-import checkers.inference.solver.backend.maxsat.MathUtils;
-import checkers.inference.solver.backend.maxsat.VectorUtils;
-import checkers.inference.solver.backend.maxsat.encoder.MaxSATAbstractConstraintEncoder;
-import checkers.inference.solver.frontend.Lattice;
-
 import org.checkerframework.javacutil.AnnotationUtils;
 import org.checkerframework.javacutil.BugInCF;
 import org.sat4j.core.VecInt;
@@ -25,6 +16,15 @@ import java.util.List;
 import java.util.Map;
 
 import javax.lang.model.element.AnnotationMirror;
+
+import checkers.inference.model.CombVariableSlot;
+import checkers.inference.model.ConstantSlot;
+import checkers.inference.model.VariableSlot;
+import checkers.inference.solver.backend.encoder.combine.CombineConstraintEncoder;
+import checkers.inference.solver.backend.maxsat.MathUtils;
+import checkers.inference.solver.backend.maxsat.VectorUtils;
+import checkers.inference.solver.backend.maxsat.encoder.MaxSATAbstractConstraintEncoder;
+import checkers.inference.solver.frontend.Lattice;
 
 public class UniverseCombineConstraintEncoder extends MaxSATAbstractConstraintEncoder
         implements CombineConstraintEncoder<VecInt[]> {

@@ -1,12 +1,12 @@
 package universe.solver;
 
+import org.sat4j.core.VecInt;
+
 import checkers.inference.solver.backend.encoder.ConstraintEncoderFactory;
 import checkers.inference.solver.backend.encoder.combine.CombineConstraintEncoder;
 import checkers.inference.solver.backend.maxsat.MaxSatFormatTranslator;
 import checkers.inference.solver.backend.maxsat.encoder.MaxSATConstraintEncoderFactory;
 import checkers.inference.solver.frontend.Lattice;
-
-import org.sat4j.core.VecInt;
 
 public class UniverseFormatTranslator extends MaxSatFormatTranslator {
 

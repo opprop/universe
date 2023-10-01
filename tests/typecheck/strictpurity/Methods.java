@@ -2,7 +2,9 @@ package universe.strictpurity;
 
 import universe.qual.Pure;
 
-/** @author wmdietl */
+/**
+ * @author wmdietl
+ */
 public class Methods {
 
     int x;

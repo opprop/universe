@@ -4,19 +4,19 @@ import universe.qual.Any;
 import universe.qual.Peer;
 import universe.qual.Rep;
 
-/** @author wmdietl */
+/**
+ * @author wmdietl
+ */
 public class Methods {
 
     // :: error: (uts.receiver.not.self)
     void receiver(@Any Methods this) {}
 
-    @Peer
-    Object m(@Peer Object o) {
+    @Peer Object m(@Peer Object o) {
         return null;
     }
 
-    @Rep
-    Object foo(@Peer Object o) {
+    @Rep Object foo(@Peer Object o) {
         return null;
     }
 
