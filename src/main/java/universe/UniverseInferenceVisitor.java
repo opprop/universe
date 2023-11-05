@@ -3,6 +3,7 @@ package universe;
 import static universe.UniverseAnnotationMirrorHolder.ANY;
 import static universe.UniverseAnnotationMirrorHolder.BOTTOM;
 import static universe.UniverseAnnotationMirrorHolder.LOST;
+import static universe.UniverseAnnotationMirrorHolder.PEER;
 import static universe.UniverseAnnotationMirrorHolder.REP;
 import static universe.UniverseAnnotationMirrorHolder.SELF;
 
@@ -92,6 +93,10 @@ public class UniverseInferenceVisitor
                         InferenceMain.getInstance().getConstraintManager();
                 ConstantSlot rep = slotManager.createConstantSlot(REP);
                 constraintManager.addPreferenceConstraint((VariableSlot) slot, rep, 80);
+                ConstantSlot peer = slotManager.createConstantSlot(PEER);
+                constraintManager.addPreferenceConstraint((VariableSlot) slot, peer, 50);
+                ConstantSlot any = slotManager.createConstantSlot(ANY);
+                constraintManager.addPreferenceConstraint((VariableSlot) slot, any, 10);
             }
         }
         return super.visitVariable(node, p);
