@@ -63,7 +63,6 @@ public class UniverseVisitor extends BaseTypeVisitor<UniverseAnnotatedTypeFactor
     @Override
     protected void checkMethodInvocability(
             AnnotatedExecutableType method, MethodInvocationTree node) {
-        return;
     }
 
     /** Ignore constructor receiver annotations. */
