@@ -4,7 +4,6 @@ import org.checkerframework.framework.qual.DefaultFor;
 import org.checkerframework.framework.qual.LiteralKind;
 import org.checkerframework.framework.qual.QualifierForLiterals;
 import org.checkerframework.framework.qual.SubtypeOf;
-import org.checkerframework.framework.qual.TargetLocations;
 import org.checkerframework.framework.qual.TypeKind;
 import org.checkerframework.framework.qual.TypeUseLocation;
 
@@ -22,7 +21,6 @@ import java.lang.annotation.Target;
 @Documented
 @Retention(RetentionPolicy.RUNTIME)
 @Target({ElementType.TYPE_PARAMETER, ElementType.TYPE_USE})
-@TargetLocations({TypeUseLocation.EXPLICIT_LOWER_BOUND})
 @SubtypeOf({Self.class, Rep.class})
 @QualifierForLiterals({LiteralKind.ALL})
 @DefaultFor(
