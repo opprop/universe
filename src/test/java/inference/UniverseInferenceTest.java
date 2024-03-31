@@ -1,7 +1,6 @@
 package universe;
 
 import org.checkerframework.framework.test.TestUtilities;
-import org.checkerframework.javacutil.Pair;
 import org.junit.runners.Parameterized.Parameters;
 
 import java.io.File;
@@ -10,6 +9,7 @@ import java.util.Arrays;
 import java.util.List;
 
 import checkers.inference.test.CFInferenceTest;
+import org.plumelib.util.IPair;
 import universe.solver.UniverseSolverEngine;
 
 public class UniverseInferenceTest extends CFInferenceTest {
@@ -27,8 +27,8 @@ public class UniverseInferenceTest extends CFInferenceTest {
     }
 
     @Override
-    public Pair<String, List<String>> getSolverNameAndOptions() {
-        return Pair.of(
+    public IPair<String, List<String>> getSolverNameAndOptions() {
+        return IPair.of(
                 UniverseSolverEngine.class.getCanonicalName(),
                 new ArrayList<String>(Arrays.asList("useGraph=false", "collectStatistic=true")));
     }
