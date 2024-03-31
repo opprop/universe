@@ -326,5 +326,5 @@ public class UniverseVisitor extends BaseTypeVisitor<UniverseAnnotatedTypeFactor
 
     @Override
     // Universe Type System does not need to check extends and implements
-    protected void checkExtendsImplements(ClassTree classTree) {}
+    protected void checkExtendsAndImplements(ClassTree classTree) {}
 }
