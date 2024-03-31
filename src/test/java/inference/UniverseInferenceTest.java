@@ -9,7 +9,7 @@ import java.util.Arrays;
 import java.util.List;
 
 import checkers.inference.test.CFInferenceTest;
-import org.plumelib.util.IPair;
+import org.checkerframework.org.plumelib.util.IPair;
 import universe.solver.UniverseSolverEngine;
 
 public class UniverseInferenceTest extends CFInferenceTest {
