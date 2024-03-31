@@ -319,8 +319,10 @@ public class UniverseInferenceVisitor
             // comparable,
             // but to infer more program, let this case fall back to "anycast" silently and continue
             // inference.
-            return qualHierarchy.isSubtypeQualifiersOnly(castCSSlot.getValue(), exprCSSlot.getValue())
-                    || qualHierarchy.isSubtypeQualifiersOnly(exprCSSlot.getValue(), castCSSlot.getValue());
+            return qualHierarchy.isSubtypeQualifiersOnly(
+                            castCSSlot.getValue(), exprCSSlot.getValue())
+                    || qualHierarchy.isSubtypeQualifiersOnly(
+                            exprCSSlot.getValue(), castCSSlot.getValue());
         } else {
             // But if there is at least on Slot, inference guarantees that solutions don't include
             // incomparable casts.

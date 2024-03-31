@@ -1,6 +1,7 @@
 package universe;
 
 import org.checkerframework.framework.test.TestUtilities;
+import org.checkerframework.org.plumelib.util.IPair;
 import org.junit.runners.Parameterized.Parameters;
 
 import java.io.File;
@@ -9,7 +10,6 @@ import java.util.Arrays;
 import java.util.List;
 
 import checkers.inference.test.CFInferenceTest;
-import org.checkerframework.org.plumelib.util.IPair;
 import universe.solver.UniverseSolverEngine;
 
 public class UniverseInferenceTest extends CFInferenceTest {
