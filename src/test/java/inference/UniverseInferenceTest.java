@@ -1,8 +1,8 @@
 package universe;
 
 import org.checkerframework.framework.test.TestUtilities;
-import org.plumelib.util.IPair;
 import org.junit.runners.Parameterized.Parameters;
+import org.plumelib.util.IPair;
 
 import java.io.File;
 import java.util.ArrayList;
