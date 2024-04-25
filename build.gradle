@@ -112,6 +112,22 @@ task cloneAndBuildDependencies(type: Exec) {
     executable './scripts/setup-deps.sh'
 }
 
+task testCheckScript(type: Exec) {
+    description 'Runs the script that checks the tests'
+    executable './scripts/check.sh'
+    args = [
+        'tests/typecheck/topol/Wildcards.java'
+    ]
+}
+
+task testInferenceScript(type: Exec) {
+    description 'Runs the script that checks the tests'
+    executable './scripts/infer.sh'
+    args = [
+        'tests/inference/Person.java'
+    ]
+}
+
 tasks.withType(JavaCompile) { compilationTask ->
     options.compilerArgs = [
         '-implicit:class',
