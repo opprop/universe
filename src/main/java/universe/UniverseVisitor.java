@@ -197,7 +197,8 @@ public class UniverseVisitor extends BaseTypeVisitor<UniverseAnnotatedTypeFactor
                         // I would say this non-lost and non-any restriction is really for declared
                         // types, not for type variables. As type variables can't have methods to
                         // invoke.
-                        if (receiverType.hasAnnotation(atypeFactory.LOST) || receiverType.hasAnnotation(atypeFactory.ANY)) {
+                        if (receiverType.hasAnnotation(atypeFactory.LOST)
+                                || receiverType.hasAnnotation(atypeFactory.ANY)) {
                             checker.reportError(node, "oam.call.forbidden");
                         }
                     }
@@ -231,7 +232,8 @@ public class UniverseVisitor extends BaseTypeVisitor<UniverseAnnotatedTypeFactor
                     // Still, I think receiver can still only be declared types, so
                     // effectiveAnnotation
                     // is not needed.
-                    if (receiverType.hasAnnotation(atypeFactory.LOST) || receiverType.hasAnnotation(atypeFactory.ANY)) {
+                    if (receiverType.hasAnnotation(atypeFactory.LOST)
+                            || receiverType.hasAnnotation(atypeFactory.ANY)) {
                         checker.reportError(node, "oam.assignment.forbidden");
                     }
                 }

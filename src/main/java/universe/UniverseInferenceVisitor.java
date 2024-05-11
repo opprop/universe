@@ -50,6 +50,7 @@ public class UniverseInferenceVisitor
     private final AnnotationMirror BOTTOM;
     private final AnnotationMirror ANY;
     private final AnnotationMirror PEER;
+
     public UniverseInferenceVisitor(
             UniverseInferenceChecker checker,
             InferenceChecker ichecker,

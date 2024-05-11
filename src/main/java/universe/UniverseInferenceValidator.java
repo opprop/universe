@@ -31,6 +31,7 @@ public class UniverseInferenceValidator extends InferenceValidator {
     private final AnnotationMirror BOTTOM;
     private final AnnotationMirror ANY;
     private final AnnotationMirror PEER;
+
     public UniverseInferenceValidator(
             BaseTypeChecker checker,
             InferenceVisitor<?, ?> visitor,

@@ -1,6 +1,5 @@
 package universe.solver;
 
-import org.checkerframework.javacutil.AnnotationBuilder;
 import org.checkerframework.javacutil.AnnotationUtils;
 import org.checkerframework.javacutil.BugInCF;
 import org.sat4j.core.VecInt;
@@ -20,15 +19,14 @@ import checkers.inference.solver.backend.maxsat.MathUtils;
 import checkers.inference.solver.backend.maxsat.VectorUtils;
 import checkers.inference.solver.backend.maxsat.encoder.MaxSATAbstractConstraintEncoder;
 import checkers.inference.solver.frontend.Lattice;
-import universe.UniverseAnnotatedTypeFactory;
-import universe.qual.Any;
 
 public class UniverseCombineConstraintEncoder extends MaxSATAbstractConstraintEncoder
         implements CombineConstraintEncoder<VecInt[]> {
 
     public AnnotationMirror ANY, PEER, REP, LOST, SELF, BOTTOM;
 
-    public UniverseCombineConstraintEncoder(Lattice lattice, Map<AnnotationMirror, Integer> typeToInt) {
+    public UniverseCombineConstraintEncoder(
+            Lattice lattice, Map<AnnotationMirror, Integer> typeToInt) {
         super(lattice, typeToInt);
         Set<AnnotationMirror> allTypes = typeToInt.keySet();
         for (AnnotationMirror am : allTypes) {

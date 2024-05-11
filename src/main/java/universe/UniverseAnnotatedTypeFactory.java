@@ -141,7 +141,8 @@ public class UniverseAnnotatedTypeFactory extends BaseInferenceRealTypeFactory {
         @Override
         public Void visitMethod(MethodTree node, AnnotatedTypeMirror p) {
             ExecutableElement executableElement = TreeUtils.elementFromDeclaration(node);
-            UniverseTypeUtil.defaultConstructorReturnToSelf(((UniverseAnnotatedTypeFactory)atypeFactory), executableElement, p);
+            UniverseTypeUtil.defaultConstructorReturnToSelf(
+                    ((UniverseAnnotatedTypeFactory) atypeFactory), executableElement, p);
             return super.visitMethod(node, p);
         }
     }
@@ -186,8 +187,7 @@ public class UniverseAnnotatedTypeFactory extends BaseInferenceRealTypeFactory {
          */
         private void applyImmutableIfImplicitlyBottom(AnnotatedTypeMirror type) {
             if (UniverseTypeUtil.isImplicitlyBottomType(type)) {
-                type.addMissingAnnotations(
-                        new HashSet<>(Arrays.asList(BOTTOM)));
+                type.addMissingAnnotations(new HashSet<>(Arrays.asList(BOTTOM)));
             }
         }
     }
