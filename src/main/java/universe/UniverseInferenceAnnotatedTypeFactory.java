@@ -1,11 +1,5 @@
 package universe;
 
-import static universe.UniverseAnnotationMirrorHolder.ANY;
-import static universe.UniverseAnnotationMirrorHolder.BOTTOM;
-import static universe.UniverseAnnotationMirrorHolder.PEER;
-import static universe.UniverseAnnotationMirrorHolder.REP;
-import static universe.UniverseAnnotationMirrorHolder.SELF;
-
 import com.sun.source.tree.BinaryTree;
 import com.sun.source.tree.Tree;
 import com.sun.source.tree.TypeCastTree;
@@ -30,8 +24,17 @@ import checkers.inference.VariableAnnotator;
 import checkers.inference.model.ConstraintManager;
 import checkers.inference.model.Slot;
 import checkers.inference.util.InferenceViewpointAdapter;
+import org.checkerframework.javacutil.AnnotationBuilder;
+import universe.qual.*;
 
 public class UniverseInferenceAnnotatedTypeFactory extends InferenceAnnotatedTypeFactory {
+
+    public final AnnotationMirror ANY = AnnotationBuilder.fromClass(elements, Any.class);
+    public final AnnotationMirror PEER = AnnotationBuilder.fromClass(elements, Peer.class);
+    public final AnnotationMirror REP = AnnotationBuilder.fromClass(elements, Rep.class);
+    public final AnnotationMirror LOST = AnnotationBuilder.fromClass(elements, Lost.class);
+    public final AnnotationMirror SELF = AnnotationBuilder.fromClass(elements, Self.class);
+    public final AnnotationMirror BOTTOM = AnnotationBuilder.fromClass(elements, Bottom.class);
 
     public UniverseInferenceAnnotatedTypeFactory(
             InferenceChecker inferenceChecker,
@@ -117,7 +120,7 @@ public class UniverseInferenceAnnotatedTypeFactory extends InferenceAnnotatedTyp
         }
     }
 
-    private static class UniverseInferencePropagationTreeAnnotater
+    private class UniverseInferencePropagationTreeAnnotater
             extends PropagationTreeAnnotator {
         public UniverseInferencePropagationTreeAnnotater(AnnotatedTypeFactory atypeFactory) {
             super(atypeFactory);

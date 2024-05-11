@@ -1,9 +1,5 @@
 package universe;
 
-import static universe.UniverseAnnotationMirrorHolder.BOTTOM;
-import static universe.UniverseAnnotationMirrorHolder.LOST;
-import static universe.UniverseAnnotationMirrorHolder.REP;
-
 import com.sun.source.tree.ParameterizedTypeTree;
 import com.sun.source.tree.Tree;
 
@@ -62,8 +58,8 @@ public class UniverseTypeValidator extends BaseTypeValidator {
                 atypeFactory.typeVariablesFromUse(type, element);
         for (AnnotatedTypeParameterBounds atpb : typeParamBounds) {
             // Previously, here also checks two bounds are not TypeKind.NULL. What's the reason?
-            if (AnnotatedTypes.containsModifier(atpb.getUpperBound(), LOST)
-                    || AnnotatedTypes.containsModifier(atpb.getLowerBound(), LOST)) {
+            if (AnnotatedTypes.containsModifier(atpb.getUpperBound(), ((UniverseAnnotatedTypeFactory)atypeFactory).LOST)
+                    || AnnotatedTypes.containsModifier(atpb.getLowerBound(), ((UniverseAnnotatedTypeFactory)atypeFactory).LOST)) {
                 checker.reportError(tree, "uts.lost.in.bounds", atpb.toString(), type.toString());
             }
         }
@@ -87,7 +83,7 @@ public class UniverseTypeValidator extends BaseTypeValidator {
 
     private void checkStaticRepError(AnnotatedTypeMirror type, Tree tree) {
         if (UniverseTypeUtil.inStaticScope(visitor.getCurrentPath())) {
-            if (AnnotatedTypes.containsModifier(type, REP)) {
+            if (AnnotatedTypes.containsModifier(type, ((UniverseAnnotatedTypeFactory)atypeFactory).REP)) {
                 checker.reportError(
                         tree, "uts.static.rep.forbidden", type.getAnnotations(), type.toString());
             }
@@ -96,7 +92,7 @@ public class UniverseTypeValidator extends BaseTypeValidator {
 
     private void checkImplicitlyBottomTypeError(AnnotatedTypeMirror type, Tree tree) {
         if (UniverseTypeUtil.isImplicitlyBottomType(type)) {
-            if (!type.hasAnnotation(BOTTOM)) {
+            if (!type.hasAnnotation(((UniverseAnnotatedTypeFactory)atypeFactory).BOTTOM)) {
                 reportInvalidAnnotationsOnUse(type, tree);
             }
         }

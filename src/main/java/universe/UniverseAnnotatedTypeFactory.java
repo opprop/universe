@@ -16,6 +16,7 @@ import org.checkerframework.framework.type.treeannotator.LiteralTreeAnnotator;
 import org.checkerframework.framework.type.treeannotator.PropagationTreeAnnotator;
 import org.checkerframework.framework.type.treeannotator.TreeAnnotator;
 import org.checkerframework.framework.type.typeannotator.DefaultForTypeAnnotator;
+import org.checkerframework.javacutil.AnnotationBuilder;
 import org.checkerframework.javacutil.TreeUtils;
 
 import java.lang.annotation.Annotation;
@@ -24,6 +25,7 @@ import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
 
+import javax.lang.model.element.AnnotationMirror;
 import javax.lang.model.element.Element;
 import javax.lang.model.element.ExecutableElement;
 
@@ -42,6 +44,13 @@ import universe.qual.Self;
  */
 public class UniverseAnnotatedTypeFactory extends BaseInferenceRealTypeFactory {
 
+    public final AnnotationMirror ANY = AnnotationBuilder.fromClass(elements, Any.class);
+    public final AnnotationMirror PEER = AnnotationBuilder.fromClass(elements, Peer.class);
+    public final AnnotationMirror REP = AnnotationBuilder.fromClass(elements, Rep.class);
+    public final AnnotationMirror LOST = AnnotationBuilder.fromClass(elements, Lost.class);
+    public final AnnotationMirror SELF = AnnotationBuilder.fromClass(elements, Self.class);
+    public final AnnotationMirror BOTTOM = AnnotationBuilder.fromClass(elements, Bottom.class);
+
     public UniverseAnnotatedTypeFactory(BaseTypeChecker checker, boolean infer) {
         super(checker, infer);
         this.postInit();
@@ -52,7 +61,7 @@ public class UniverseAnnotatedTypeFactory extends BaseInferenceRealTypeFactory {
     public AnnotatedDeclaredType getSelfType(Tree tree) {
         AnnotatedDeclaredType type = super.getSelfType(tree);
         if (type != null) {
-            type.replaceAnnotation(UniverseAnnotationMirrorHolder.SELF);
+            type.replaceAnnotation(SELF);
         }
         return type;
     }
@@ -91,7 +100,7 @@ public class UniverseAnnotatedTypeFactory extends BaseInferenceRealTypeFactory {
 
     @Override
     public void addComputedTypeAnnotations(Element elt, AnnotatedTypeMirror type) {
-        UniverseTypeUtil.defaultConstructorReturnToSelf(elt, type);
+        UniverseTypeUtil.defaultConstructorReturnToSelf(this, elt, type);
         super.addComputedTypeAnnotations(elt, type);
     }
 
@@ -99,7 +108,7 @@ public class UniverseAnnotatedTypeFactory extends BaseInferenceRealTypeFactory {
     @Override
     public AnnotatedTypeMirror getTypeOfExtendsImplements(Tree clause) {
         AnnotatedTypeMirror s = super.getTypeOfExtendsImplements(clause);
-        s.replaceAnnotation(UniverseAnnotationMirrorHolder.SELF);
+        s.replaceAnnotation(SELF);
         return s;
     }
 
@@ -123,7 +132,7 @@ public class UniverseAnnotatedTypeFactory extends BaseInferenceRealTypeFactory {
 
             // There's no "super" kind, so make a string comparison.
             if (node.getName().contentEquals("super")) {
-                p.replaceAnnotation(UniverseAnnotationMirrorHolder.SELF);
+                p.replaceAnnotation(SELF);
             }
 
             return super.visitIdentifier(node, p);
@@ -132,12 +141,12 @@ public class UniverseAnnotatedTypeFactory extends BaseInferenceRealTypeFactory {
         @Override
         public Void visitMethod(MethodTree node, AnnotatedTypeMirror p) {
             ExecutableElement executableElement = TreeUtils.elementFromDeclaration(node);
-            UniverseTypeUtil.defaultConstructorReturnToSelf(executableElement, p);
+            UniverseTypeUtil.defaultConstructorReturnToSelf(((UniverseAnnotatedTypeFactory)atypeFactory), executableElement, p);
             return super.visitMethod(node, p);
         }
     }
 
-    private static class UniversePropagationTreeAnnotator extends PropagationTreeAnnotator {
+    private class UniversePropagationTreeAnnotator extends PropagationTreeAnnotator {
         /**
          * Creates a {@link DefaultForTypeAnnotator} from the given checker, using that checker's
          * type hierarchy.
@@ -178,7 +187,7 @@ public class UniverseAnnotatedTypeFactory extends BaseInferenceRealTypeFactory {
         private void applyImmutableIfImplicitlyBottom(AnnotatedTypeMirror type) {
             if (UniverseTypeUtil.isImplicitlyBottomType(type)) {
                 type.addMissingAnnotations(
-                        new HashSet<>(Arrays.asList(UniverseAnnotationMirrorHolder.BOTTOM)));
+                        new HashSet<>(Arrays.asList(BOTTOM)));
             }
         }
     }

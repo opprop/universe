@@ -1,9 +1,5 @@
 package universe;
 
-import static universe.UniverseAnnotationMirrorHolder.BOTTOM;
-import static universe.UniverseAnnotationMirrorHolder.LOST;
-import static universe.UniverseAnnotationMirrorHolder.REP;
-
 import com.sun.source.tree.ParameterizedTypeTree;
 import com.sun.source.tree.Tree;
 
@@ -11,26 +7,42 @@ import org.checkerframework.common.basetype.BaseTypeChecker;
 import org.checkerframework.framework.type.AnnotatedTypeFactory;
 import org.checkerframework.framework.type.AnnotatedTypeMirror;
 import org.checkerframework.framework.type.AnnotatedTypeParameterBounds;
+import org.checkerframework.javacutil.AnnotationBuilder;
 import org.checkerframework.javacutil.TreeUtils;
 
 import java.util.List;
 
+import javax.lang.model.element.AnnotationMirror;
 import javax.lang.model.element.TypeElement;
+import javax.lang.model.util.Elements;
 
 import checkers.inference.InferenceValidator;
 import checkers.inference.InferenceVisitor;
+import universe.qual.*;
 
 /**
  * This type validator ensures correct usage of ownership modifiers or generates constraints to
  * ensure well-formedness.
  */
 public class UniverseInferenceValidator extends InferenceValidator {
-
+    private final AnnotationMirror REP;
+    private final AnnotationMirror LOST;
+    private final AnnotationMirror SELF;
+    private final AnnotationMirror BOTTOM;
+    private final AnnotationMirror ANY;
+    private final AnnotationMirror PEER;
     public UniverseInferenceValidator(
             BaseTypeChecker checker,
             InferenceVisitor<?, ?> visitor,
             AnnotatedTypeFactory atypeFactory) {
         super(checker, visitor, atypeFactory);
+        Elements elements = checker.getElementUtils();
+        ANY = AnnotationBuilder.fromClass(elements, Any.class);
+        PEER = AnnotationBuilder.fromClass(elements, Peer.class);
+        REP = AnnotationBuilder.fromClass(elements, Rep.class);
+        LOST = AnnotationBuilder.fromClass(elements, Lost.class);
+        SELF = AnnotationBuilder.fromClass(elements, Self.class);
+        BOTTOM = AnnotationBuilder.fromClass(elements, Bottom.class);
     }
 
     /**
