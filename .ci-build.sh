@@ -11,3 +11,5 @@ export SHELLOPTS
 
 ./gradlew check
 ./gradlew test
+./gradlew testCheckScript
+./gradlew testInferenceScript
