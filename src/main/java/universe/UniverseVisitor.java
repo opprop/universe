@@ -53,12 +53,6 @@ public class UniverseVisitor extends BaseTypeVisitor<UniverseAnnotatedTypeFactor
         return new UniverseTypeValidator(checker, this, atypeFactory);
     }
 
-    @Override
-    public boolean isValidUse(
-            AnnotatedDeclaredType declarationType, AnnotatedDeclaredType useType, Tree tree) {
-        return true;
-    }
-
     /** Ignore method receiver annotations. */
     @Override
     protected void checkMethodInvocability(

@@ -66,12 +66,6 @@ public class UniverseInferenceVisitor
         return new UniverseInferenceValidator(checker, this, atypeFactory);
     }
 
-    @Override
-    public boolean isValidUse(
-            AnnotatedDeclaredType declarationType, AnnotatedDeclaredType useType, Tree tree) {
-        return true;
-    }
-
     /**
      * Ignore constructor receiver annotations as result type of the constructor is always SELF for
      * universe.

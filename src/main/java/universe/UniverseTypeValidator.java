@@ -1,6 +1,5 @@
 package universe;
 
-import static universe.UniverseAnnotationMirrorHolder.BOTTOM;
 import static universe.UniverseAnnotationMirrorHolder.LOST;
 import static universe.UniverseAnnotationMirrorHolder.REP;
 
@@ -36,9 +35,6 @@ public class UniverseTypeValidator extends BaseTypeValidator {
      */
     @Override
     public Void visitDeclared(AnnotatedTypeMirror.AnnotatedDeclaredType type, Tree p) {
-        if (checkTopLevelDeclaredOrPrimitiveType) {
-            checkImplicitlyBottomTypeError(type, p);
-        }
         checkStaticRepError(type, p);
         // @Peer is allowed in static context
 
@@ -77,27 +73,11 @@ public class UniverseTypeValidator extends BaseTypeValidator {
         return super.visitArray(type, tree);
     }
 
-    @Override
-    public Void visitPrimitive(AnnotatedTypeMirror.AnnotatedPrimitiveType type, Tree tree) {
-        if (checkTopLevelDeclaredOrPrimitiveType) {
-            checkImplicitlyBottomTypeError(type, tree);
-        }
-        return super.visitPrimitive(type, tree);
-    }
-
     private void checkStaticRepError(AnnotatedTypeMirror type, Tree tree) {
         if (UniverseTypeUtil.inStaticScope(visitor.getCurrentPath())) {
             if (AnnotatedTypes.containsModifier(type, REP)) {
                 checker.reportError(
                         tree, "uts.static.rep.forbidden", type.getAnnotations(), type.toString());
-            }
-        }
-    }
-
-    private void checkImplicitlyBottomTypeError(AnnotatedTypeMirror type, Tree tree) {
-        if (UniverseTypeUtil.isImplicitlyBottomType(type)) {
-            if (!type.hasAnnotation(BOTTOM)) {
-                reportInvalidAnnotationsOnUse(type, tree);
             }
         }
     }

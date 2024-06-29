@@ -6,6 +6,7 @@ import org.checkerframework.framework.qual.QualifierForLiterals;
 import org.checkerframework.framework.qual.SubtypeOf;
 import org.checkerframework.framework.qual.TypeKind;
 import org.checkerframework.framework.qual.TypeUseLocation;
+import org.checkerframework.framework.qual.UpperBoundFor;
 
 import java.lang.annotation.Documented;
 import java.lang.annotation.ElementType;
@@ -23,6 +24,28 @@ import java.lang.annotation.Target;
 @Target({ElementType.TYPE_PARAMETER, ElementType.TYPE_USE})
 @SubtypeOf({Self.class, Rep.class})
 @QualifierForLiterals({LiteralKind.ALL})
+@UpperBoundFor(
+        typeKinds = {
+            TypeKind.INT,
+            TypeKind.BYTE,
+            TypeKind.SHORT,
+            TypeKind.BOOLEAN,
+            TypeKind.LONG,
+            TypeKind.CHAR,
+            TypeKind.FLOAT,
+            TypeKind.DOUBLE
+        },
+        types = {
+            String.class,
+            Double.class,
+            Boolean.class,
+            Byte.class,
+            Character.class,
+            Float.class,
+            Integer.class,
+            Long.class,
+            Short.class
+        })
 @DefaultFor(
         value = {TypeUseLocation.LOWER_BOUND},
         typeKinds = {
