@@ -108,7 +108,7 @@ public class UniverseInferenceAnnotatedTypeFactory extends InferenceAnnotatedTyp
 
         @Override
         public void handleBinaryTree(AnnotatedTypeMirror atm, BinaryTree binaryTree) {
-            if (atm.isAnnotatedInHierarchy(getVarAnnot())) {
+            if (atm.hasAnnotationInHierarchy(getVarAnnot())) {
                 // Happens for binary trees whose atm is implicitly immutable and already handled by
                 // PICOInferencePropagationTreeAnnotator
                 return;
@@ -135,7 +135,7 @@ public class UniverseInferenceAnnotatedTypeFactory extends InferenceAnnotatedTyp
         public Void visitTypeCast(TypeCastTree node, AnnotatedTypeMirror type) {
             applyBottomIfImplicitlyBottom(
                     type); // Must run before calling super method to respect existing annotation
-            if (type.isAnnotatedInHierarchy(ANY)) {
+            if (type.hasAnnotationInHierarchy(ANY)) {
                 // VarAnnot is guarenteed to not exist on type, because PropagationTreeAnnotator has
                 // the highest previledge
                 // So VarAnnot hasn't been inserted to cast type yet.

@@ -115,6 +115,8 @@ task cloneAndBuildDependencies(type: Exec) {
 tasks.withType(JavaCompile) { compilationTask ->
     options.compilerArgs = [
         '-implicit:class',
+        '-Werror',
+        '-Xlint:deprecation',
         '-Awarns',
         '-Xmaxwarns',
         '10000',
@@ -125,6 +127,9 @@ tasks.withType(JavaCompile) { compilationTask ->
     // Enable Error Prone
     options.errorprone.enabled = !isJava8
     options.errorprone.disableWarningsInGeneratedCode = true
+    options.errorprone.errorproneArgs = [
+        '-Xep:VoidUsed:OFF',
+    ]
 }
 
 afterEvaluate {
