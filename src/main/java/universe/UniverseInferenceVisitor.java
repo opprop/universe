@@ -1,11 +1,5 @@
 package universe;
 
-import static universe.UniverseAnnotationMirrorHolder.ANY;
-import static universe.UniverseAnnotationMirrorHolder.BOTTOM;
-import static universe.UniverseAnnotationMirrorHolder.LOST;
-import static universe.UniverseAnnotationMirrorHolder.REP;
-import static universe.UniverseAnnotationMirrorHolder.SELF;
-
 import com.sun.source.tree.AssignmentTree;
 import com.sun.source.tree.ClassTree;
 import com.sun.source.tree.ExpressionTree;
@@ -23,6 +17,7 @@ import org.checkerframework.framework.type.AnnotatedTypeMirror;
 import org.checkerframework.framework.type.AnnotatedTypeMirror.AnnotatedDeclaredType;
 import org.checkerframework.framework.type.AnnotatedTypeMirror.AnnotatedExecutableType;
 import org.checkerframework.framework.type.QualifierHierarchy;
+import org.checkerframework.javacutil.AnnotationBuilder;
 import org.checkerframework.javacutil.TreeUtils;
 
 import javax.lang.model.element.AnnotationMirror;
@@ -37,6 +32,7 @@ import checkers.inference.model.ConstantSlot;
 import checkers.inference.model.ConstraintManager;
 import checkers.inference.model.Slot;
 import checkers.inference.model.VariableSlot;
+import universe.qual.*;
 
 /**
  * Type visitor to either enforce or infer the universe type rules.
@@ -48,6 +44,12 @@ public class UniverseInferenceVisitor
 
     private final boolean checkOaM;
     private final boolean checkStrictPurity;
+    private final AnnotationMirror REP;
+    private final AnnotationMirror LOST;
+    private final AnnotationMirror SELF;
+    private final AnnotationMirror BOTTOM;
+    private final AnnotationMirror ANY;
+    private final AnnotationMirror PEER;
 
     public UniverseInferenceVisitor(
             UniverseInferenceChecker checker,
@@ -55,7 +57,12 @@ public class UniverseInferenceVisitor
             BaseAnnotatedTypeFactory factory,
             boolean infer) {
         super(checker, ichecker, factory, infer);
-
+        ANY = AnnotationBuilder.fromClass(elements, Any.class);
+        PEER = AnnotationBuilder.fromClass(elements, Peer.class);
+        REP = AnnotationBuilder.fromClass(elements, Rep.class);
+        LOST = AnnotationBuilder.fromClass(elements, Lost.class);
+        SELF = AnnotationBuilder.fromClass(elements, Self.class);
+        BOTTOM = AnnotationBuilder.fromClass(elements, Bottom.class);
         checkOaM = checker.getLintOption("checkOaM", false);
         checkStrictPurity = checker.getLintOption("checkStrictPurity", false);
     }

@@ -22,7 +22,6 @@ public class UniverseChecker extends BaseTypeChecker {
     @Override
     public void initChecker() {
         super.initChecker();
-        UniverseAnnotationMirrorHolder.init(this);
     }
 
     @Override

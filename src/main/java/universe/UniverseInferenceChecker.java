@@ -23,7 +23,6 @@ public class UniverseInferenceChecker extends BaseInferrableChecker {
     @Override
     public void initChecker() {
         super.initChecker();
-        UniverseAnnotationMirrorHolder.init(this);
     }
 
     @Override
