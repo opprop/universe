@@ -1,12 +1,5 @@
 package universe.solver;
 
-import static universe.UniverseAnnotationMirrorHolder.ANY;
-import static universe.UniverseAnnotationMirrorHolder.BOTTOM;
-import static universe.UniverseAnnotationMirrorHolder.LOST;
-import static universe.UniverseAnnotationMirrorHolder.PEER;
-import static universe.UniverseAnnotationMirrorHolder.REP;
-import static universe.UniverseAnnotationMirrorHolder.SELF;
-
 import org.checkerframework.javacutil.AnnotationUtils;
 import org.checkerframework.javacutil.BugInCF;
 import org.sat4j.core.VecInt;
@@ -14,6 +7,7 @@ import org.sat4j.core.VecInt;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import javax.lang.model.element.AnnotationMirror;
 
@@ -29,9 +23,27 @@ import checkers.inference.solver.frontend.Lattice;
 public class UniverseCombineConstraintEncoder extends MaxSATAbstractConstraintEncoder
         implements CombineConstraintEncoder<VecInt[]> {
 
+    public AnnotationMirror ANY, PEER, REP, LOST, SELF, BOTTOM;
+
     public UniverseCombineConstraintEncoder(
             Lattice lattice, Map<AnnotationMirror, Integer> typeToInt) {
         super(lattice, typeToInt);
+        Set<AnnotationMirror> allTypes = typeToInt.keySet();
+        for (AnnotationMirror am : allTypes) {
+            if (AnnotationUtils.areSameByName(am, "universe.qual.Any")) {
+                ANY = am;
+            } else if (AnnotationUtils.areSameByName(am, "universe.qual.Peer")) {
+                PEER = am;
+            } else if (AnnotationUtils.areSameByName(am, "universe.qual.Rep")) {
+                REP = am;
+            } else if (AnnotationUtils.areSameByName(am, "universe.qual.Lost")) {
+                LOST = am;
+            } else if (AnnotationUtils.areSameByName(am, "universe.qual.Self")) {
+                SELF = am;
+            } else if (AnnotationUtils.areSameByName(am, "universe.qual.Bottom")) {
+                BOTTOM = am;
+            }
+        }
     }
 
     /** Wrapper method to get integer id of an AnnotationMirror to avoid Map get operations */

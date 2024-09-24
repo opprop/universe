@@ -1,12 +1,5 @@
 package universe;
 
-import static universe.UniverseAnnotationMirrorHolder.ANY;
-import static universe.UniverseAnnotationMirrorHolder.BOTTOM;
-import static universe.UniverseAnnotationMirrorHolder.LOST;
-import static universe.UniverseAnnotationMirrorHolder.PEER;
-import static universe.UniverseAnnotationMirrorHolder.REP;
-import static universe.UniverseAnnotationMirrorHolder.SELF;
-
 import com.sun.source.tree.AssignmentTree;
 import com.sun.source.tree.ClassTree;
 import com.sun.source.tree.ExpressionTree;
@@ -82,13 +75,13 @@ public class UniverseVisitor extends BaseTypeVisitor<UniverseAnnotatedTypeFactor
         if (TreeUtils.isConstructor(node)) {
             AnnotatedDeclaredType constructorReturnType =
                     (AnnotatedDeclaredType) executableType.getReturnType();
-            if (!constructorReturnType.hasAnnotation(SELF)) {
+            if (!constructorReturnType.hasAnnotation(atypeFactory.SELF)) {
                 checker.reportError(node, "uts.constructor.not.self");
             }
         } else {
             AnnotatedDeclaredType declaredReceiverType = executableType.getReceiverType();
             if (declaredReceiverType != null) {
-                if (!declaredReceiverType.hasAnnotation(SELF)) {
+                if (!declaredReceiverType.hasAnnotation(atypeFactory.SELF)) {
                     checker.reportError(node, "uts.receiver.not.self");
                 }
             }
@@ -143,7 +136,7 @@ public class UniverseVisitor extends BaseTypeVisitor<UniverseAnnotatedTypeFactor
 
         // Check for @Lost in combined parameter types deeply.
         for (AnnotatedTypeMirror parameterType : constructor.getParameterTypes()) {
-            if (AnnotatedTypes.containsModifier(parameterType, LOST)) {
+            if (AnnotatedTypes.containsModifier(parameterType, atypeFactory.LOST)) {
                 checker.reportError(node, "uts.lost.parameter");
             }
         }
@@ -166,11 +159,11 @@ public class UniverseVisitor extends BaseTypeVisitor<UniverseAnnotatedTypeFactor
         // TODO I would say here by top-level, it's really main modifier instead of upper bounds of
         // type variables, as there is no "new T()" to create a new instance.
         if (UniverseTypeUtil.isImplicitlyBottomType(type)) {
-            if (!type.hasAnnotation(BOTTOM)) {
+            if (!type.hasAnnotation(atypeFactory.BOTTOM)) {
                 checker.reportError(node, "uts.new.ownership");
             }
         } else {
-            if (!(type.hasAnnotation(PEER) || type.hasAnnotation(REP))) {
+            if (!(type.hasAnnotation(atypeFactory.PEER) || type.hasAnnotation(atypeFactory.REP))) {
                 checker.reportError(node, "uts.new.ownership");
             }
         }
@@ -188,7 +181,7 @@ public class UniverseVisitor extends BaseTypeVisitor<UniverseAnnotatedTypeFactor
         AnnotatedExecutableType methodType = atypeFactory.methodFromUse(node).executableType;
         // Check for @Lost in combined parameter types deeply.
         for (AnnotatedTypeMirror parameterType : methodType.getParameterTypes()) {
-            if (AnnotatedTypes.containsModifier(parameterType, LOST)) {
+            if (AnnotatedTypes.containsModifier(parameterType, atypeFactory.LOST)) {
                 checker.reportError(node, "uts.lost.parameter");
             }
         }
@@ -204,7 +197,8 @@ public class UniverseVisitor extends BaseTypeVisitor<UniverseAnnotatedTypeFactor
                         // I would say this non-lost and non-any restriction is really for declared
                         // types, not for type variables. As type variables can't have methods to
                         // invoke.
-                        if (receiverType.hasAnnotation(LOST) || receiverType.hasAnnotation(ANY)) {
+                        if (receiverType.hasAnnotation(atypeFactory.LOST)
+                                || receiverType.hasAnnotation(atypeFactory.ANY)) {
                             checker.reportError(node, "oam.call.forbidden");
                         }
                     }
@@ -225,7 +219,7 @@ public class UniverseVisitor extends BaseTypeVisitor<UniverseAnnotatedTypeFactor
     public Void visitAssignment(AssignmentTree node, Void p) {
         AnnotatedTypeMirror type = atypeFactory.getAnnotatedType(node.getVariable());
         // Check for @Lost in left hand side of assignment deeply.
-        if (AnnotatedTypes.containsModifier(type, LOST)) {
+        if (AnnotatedTypes.containsModifier(type, atypeFactory.LOST)) {
             checker.reportError(node, "uts.lost.lhs");
         }
 
@@ -238,7 +232,8 @@ public class UniverseVisitor extends BaseTypeVisitor<UniverseAnnotatedTypeFactor
                     // Still, I think receiver can still only be declared types, so
                     // effectiveAnnotation
                     // is not needed.
-                    if (receiverType.hasAnnotation(LOST) || receiverType.hasAnnotation(ANY)) {
+                    if (receiverType.hasAnnotation(atypeFactory.LOST)
+                            || receiverType.hasAnnotation(atypeFactory.ANY)) {
                         checker.reportError(node, "oam.assignment.forbidden");
                     }
                 }
@@ -256,7 +251,7 @@ public class UniverseVisitor extends BaseTypeVisitor<UniverseAnnotatedTypeFactor
     public Void visitTypeCast(TypeCastTree node, Void p) {
         AnnotatedTypeMirror castty = atypeFactory.getAnnotatedType(node.getType());
 
-        if (AnnotatedTypes.containsModifier(castty, LOST)) {
+        if (AnnotatedTypes.containsModifier(castty, atypeFactory.LOST)) {
             checker.reportWarning(node, "uts.cast.type.warning", castty);
         }
 

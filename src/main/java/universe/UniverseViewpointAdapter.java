@@ -1,12 +1,5 @@
 package universe;
 
-import static universe.UniverseAnnotationMirrorHolder.ANY;
-import static universe.UniverseAnnotationMirrorHolder.BOTTOM;
-import static universe.UniverseAnnotationMirrorHolder.LOST;
-import static universe.UniverseAnnotationMirrorHolder.PEER;
-import static universe.UniverseAnnotationMirrorHolder.REP;
-import static universe.UniverseAnnotationMirrorHolder.SELF;
-
 import org.checkerframework.framework.type.AbstractViewpointAdapter;
 import org.checkerframework.framework.type.AnnotatedTypeFactory;
 import org.checkerframework.framework.type.AnnotatedTypeMirror;
@@ -23,7 +16,7 @@ public class UniverseViewpointAdapter extends AbstractViewpointAdapter {
     @Override
     protected AnnotationMirror extractAnnotationMirror(AnnotatedTypeMirror atm) {
         assert atm != null;
-        return atm.getAnnotationInHierarchy(ANY);
+        return atm.getAnnotationInHierarchy(((UniverseAnnotatedTypeFactory) atypeFactory).ANY);
     }
 
     @Override
@@ -32,28 +25,37 @@ public class UniverseViewpointAdapter extends AbstractViewpointAdapter {
         assert receiverAnnotation != null;
         assert declaredAnnotation != null;
 
-        if (AnnotationUtils.areSame(receiverAnnotation, SELF)) {
+        if (AnnotationUtils.areSame(
+                receiverAnnotation, ((UniverseAnnotatedTypeFactory) atypeFactory).SELF)) {
             return declaredAnnotation;
-        } else if (AnnotationUtils.areSame(declaredAnnotation, BOTTOM)) {
-            return BOTTOM;
-        } else if (AnnotationUtils.areSame(declaredAnnotation, ANY)) {
-            return ANY;
-        } else if (AnnotationUtils.areSame(declaredAnnotation, SELF)) {
+        } else if (AnnotationUtils.areSame(
+                declaredAnnotation, ((UniverseAnnotatedTypeFactory) atypeFactory).BOTTOM)) {
+            return ((UniverseAnnotatedTypeFactory) atypeFactory).BOTTOM;
+        } else if (AnnotationUtils.areSame(
+                declaredAnnotation, ((UniverseAnnotatedTypeFactory) atypeFactory).ANY)) {
+            return ((UniverseAnnotatedTypeFactory) atypeFactory).ANY;
+        } else if (AnnotationUtils.areSame(
+                declaredAnnotation, ((UniverseAnnotatedTypeFactory) atypeFactory).SELF)) {
             return receiverAnnotation;
-        } else if (AnnotationUtils.areSame(receiverAnnotation, BOTTOM)) {
+        } else if (AnnotationUtils.areSame(
+                receiverAnnotation, ((UniverseAnnotatedTypeFactory) atypeFactory).BOTTOM)) {
             // If receiver is bottom, has no ownership information. Any member
             // of it from the viewpoint of self is any, except when declared
             // type is bottom.
-            return ANY;
-        } else if (AnnotationUtils.areSame(declaredAnnotation, LOST)) {
-            return LOST;
-        } else if (AnnotationUtils.areSame(declaredAnnotation, PEER)) {
-            if (AnnotationUtils.areSame(receiverAnnotation, PEER)) {
-                return PEER;
-            } else if (AnnotationUtils.areSame(receiverAnnotation, REP)) {
-                return REP;
+            return ((UniverseAnnotatedTypeFactory) atypeFactory).ANY;
+        } else if (AnnotationUtils.areSame(
+                declaredAnnotation, ((UniverseAnnotatedTypeFactory) atypeFactory).LOST)) {
+            return ((UniverseAnnotatedTypeFactory) atypeFactory).LOST;
+        } else if (AnnotationUtils.areSame(
+                declaredAnnotation, ((UniverseAnnotatedTypeFactory) atypeFactory).PEER)) {
+            if (AnnotationUtils.areSame(
+                    receiverAnnotation, ((UniverseAnnotatedTypeFactory) atypeFactory).PEER)) {
+                return ((UniverseAnnotatedTypeFactory) atypeFactory).PEER;
+            } else if (AnnotationUtils.areSame(
+                    receiverAnnotation, ((UniverseAnnotatedTypeFactory) atypeFactory).REP)) {
+                return ((UniverseAnnotatedTypeFactory) atypeFactory).REP;
             }
         }
-        return LOST;
+        return ((UniverseAnnotatedTypeFactory) atypeFactory).LOST;
     }
 }

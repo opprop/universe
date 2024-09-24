@@ -30,7 +30,7 @@ public class UniverseInferenceTest extends CFInferenceTest {
     public IPair<String, List<String>> getSolverNameAndOptions() {
         return IPair.of(
                 UniverseSolverEngine.class.getCanonicalName(),
-                new ArrayList<String>(Arrays.asList("useGraph=false", "collectStatistic=true")));
+                new ArrayList<>(Arrays.asList("useGraph=false", "collectStatistic=true")));
     }
 
     @Override
