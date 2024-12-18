@@ -235,10 +235,9 @@ public class UniverseVisitor extends BaseTypeVisitor<UniverseAnnotatedTypeFactor
                 AnnotatedTypeMirror receiverType = atypeFactory.getAnnotatedType(receiverTree);
 
                 if (receiverType != null) {
-                    // Still, I think receiver can still only be declared types, so
-                    // effectiveAnnotation
-                    // is not needed.
-                    if (receiverType.hasAnnotation(LOST) || receiverType.hasAnnotation(ANY)) {
+                    // We need to check effective annotations, since receiver type could be a type
+                    // variable of the class.
+                    if (receiverType.hasEffectiveAnnotation(LOST) || receiverType.hasEffectiveAnnotation(ANY)) {
                         checker.reportError(node, "oam.assignment.forbidden");
                     }
                 }

@@ -1,5 +1,16 @@
 import universe.qual.Any;
 
+package java.io;
+
+class PrintStream {
+  public void print(char @Any [] s);
+  public void print(@Any String s);
+  public void print(@Any Object obj);
+  public void println(char @Any [] x);
+  public void println(@Any String s);
+  public void println(@Any Object x);
+}
+
 package java.lang;
 
 class Object {

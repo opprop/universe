@@ -20,6 +20,14 @@ cd universe
 ./.ci-build.sh
 ````
 
+## Supported Options
+
+Linter options:
+* `checkOaM` Enables encapsulation checks (Owner-as-Modifier). Without this option, only topology checks are performed,
+  so make sure to enable set this option if it should be checked that `@Any` references are not used for writing.
+
+Linter options can be passed via `-Alint=<option>`. Note that everything except the last option given in that way is
+ignored (see https://checkerframework.org/manual/#alint for more details)!
 
 ## Type checking example
 
